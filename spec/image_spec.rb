@@ -49,68 +49,87 @@ RSpec.describe Image do
     end
   end
 
-  describe '#blur_image' do
+  context 'with basic array' do
+    arr_3x3 = [
+      [0, 0, 0],
+      [0, 1, 0],
+      [0, 0, 1]
+    ]
+    coordinates = [[1, 1], [2, 2]]
+    image_3x3 = Image.new(arr_3x3)
 
-    it "should blur pixels right & left of the center pixel" do
-      # arrange
-      center_pixel_array = [
-        [0,0,0,0,0],
-        [0,0,0,0,0],
-        [0,0,1,1,0],
-        [0,0,0,0,0],
-        [0,0,0,0,0]
-      ]
-      blurred_array = [
-        [0,0,0,0,0],
-        [0,0,0,0,0],
-        [0,1,1,1,1],
-        [0,0,0,0,0],
-        [0,0,0,0,0]
-      ]
-      center_image = Image.new(center_pixel_array)
+    describe '#blur' do
+      it 'should call #pixel_coordinates' do
+        expect(image_3x3).to receive(:pixel_coordinates)
+        image_3x3.blur
+      end
 
-      # act
-      center_image.blur_image
+      # it "should blur pixels right & left of the center pixel" do
+      #   # arrange
+      #   center_pixel_array = [
+      #     [0, 0, 0, 0, 0],
+      #     [0, 0, 0, 0, 0],
+      #     [0, 0, 1, 1, 0],
+      #     [0, 0, 0, 0, 0],
+      #     [0, 0, 0, 0, 0]
+      #   ]
+      #   blurred_array = [
+      #     [0, 0, 0, 0, 0],
+      #     [0, 0, 0, 0, 0],
+      #     [0, 1, 1, 1, 1],
+      #     [0, 0, 0, 0, 0],
+      #     [0, 0, 0, 0, 0]
+      #   ]
+      #   center_image = Image.new(center_pixel_array)
 
-      # assert
-      expect(center_image.blurred_image).to eq(blurred_array)
+        # act
+
+        # assert
+        # expect(center_image.blurred_image).to eq(blurred_array)
+      # end
+
+      # it "should blur top/right/bottom/left pixels of [1][3] & [3][1] pixels" do
+      #   # arrange
+      #   multi_pixel_array = [
+      #     [0,0,0,0,0],
+      #     [0,0,0,1,0],
+      #     [0,0,0,0,0],
+      #     [0,1,0,0,0],
+      #     [0,0,0,0,0]
+      #   ]
+      #   multi_image = Image.new(multi_pixel_array)
+      # end
+
+      # it "should blur the pixel to the right of the [3][0] pixel" do
+      #   # arrange
+      #   edge_pixel_array = [
+      #     [0,0,0,0,0],
+      #     [0,0,0,0,0],
+      #     [0,0,0,0,0],
+      #     [1,0,0,0,0],
+      #     [0,0,0,0,0]
+      #   ]
+      #   blurred_array = [
+      #     [0,0,0,0,0],
+      #     [0,0,0,0,0],
+      #     [0,0,0,0,0],
+      #     [1,1,0,0,0],
+      #     [0,0,0,0,0]
+      #   ]
+      #   edge_image = Image.new(edge_pixel_array)
+
+      #   # act
+      #   edge_image.blur_image
+
+      #   # assert
+      #   expect(edge_image.blurred_image).to eq(blurred_array)
+      # end
     end
 
-    # it "should blur top/right/bottom/left pixels of [1][3] & [3][1] pixels" do
-    #   # arrange
-    #   multi_pixel_array = [
-    #     [0,0,0,0,0],
-    #     [0,0,0,1,0],
-    #     [0,0,0,0,0],
-    #     [0,1,0,0,0],
-    #     [0,0,0,0,0]
-    #   ]
-    #   multi_image = Image.new(multi_pixel_array)
-    # end
-
-    it "should blur the pixel to the right of the [3][0] pixel" do
-      # arrange
-      edge_pixel_array = [
-        [0,0,0,0,0],
-        [0,0,0,0,0],
-        [0,0,0,0,0],
-        [1,0,0,0,0],
-        [0,0,0,0,0]
-      ]
-      blurred_array = [
-        [0,0,0,0,0],
-        [0,0,0,0,0],
-        [0,0,0,0,0],
-        [1,1,0,0,0],
-        [0,0,0,0,0]
-      ]
-      edge_image = Image.new(edge_pixel_array)
-
-      # act
-      edge_image.blur_image
-
-      # assert
-      expect(edge_image.blurred_image).to eq(blurred_array)
+    describe '#pixel_coordinates' do
+      it 'should find the correct pixel coordinates' do
+        expect(image_3x3.pixel_coordinates).to eq(coordinates)
+      end
     end
   end
 end
