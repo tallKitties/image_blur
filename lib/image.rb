@@ -18,7 +18,7 @@ class Image
 
   def blur
     pixel_coordinates.each do |coordinate|
-      # update_north(coordinate)
+      update_north(coordinate)
     end
   end
 
@@ -30,5 +30,14 @@ class Image
       end
     end
     coordinates
+  end
+
+  def update_north(coordinate)
+    row, col = coordinate
+    in_bounds?(row, col)
+  end
+
+  def in_bounds?(row, col)
+    true
   end
 end
