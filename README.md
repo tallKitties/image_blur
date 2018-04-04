@@ -7,9 +7,11 @@ An algorithm to modify cells of a 2D array that are around any given cell contai
 requires a 2D array as an argument.
 
 image = Image.new([  
-&nbsp;&nbsp;[0,0,0],  
-&nbsp;&nbsp;[0,1,0],  
-&nbsp;&nbsp;[0,0,0]  
+&nbsp;&nbsp;[0, 0, 0, 0, 0],  
+&nbsp;&nbsp;[0, 0, 0, 0, 0],  
+&nbsp;&nbsp;[0, 0, 1, 0, 0],  
+&nbsp;&nbsp;[0, 0, 0, 0, 0],  
+&nbsp;&nbsp;[0, 0, 0, 0, 0]  
 ])  
 
 @image_array
@@ -18,12 +20,15 @@ image = Image.new([
 #output_image
 + will puts the given array
 
-#blur
+#blur([distance=int])
++ #blur(2)
 + will change the cells to the top/right/bottom/left of any cell containing 1.
-  + in the above example, @blurred_image would now be...
-  + [0,1,0]
-  + [1,1,1]
-  + [0,1,0]
+  + in the above example, @image_array would now be...
+  + [0, 0, 1, 0, 0]  
+  + [0, 0, 1, 0, 0]  
+  + [1, 1, 1, 1, 1]  
+  + [0, 0, 1, 0, 0]  
+  + [0, 0, 1, 0, 0]  
 
 ## Development
 
