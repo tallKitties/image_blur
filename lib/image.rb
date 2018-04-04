@@ -40,10 +40,6 @@ class Image
       coordinates_to_update(d, pixel).each do |c|
         turn_pixel_on(c[0], c[1])
       end
-      # update_north(row, col)
-      # update_east(row, col)
-      # update_south(row, col)
-      # update_west(row, col)
     end
   end
 
@@ -56,22 +52,6 @@ class Image
       [row + distance, col],
       [row, col - distance]
     ]
-  end
-
-  def update_north(row, col)
-    turn_pixel_on(row - 1, col)
-  end
-
-  def update_east(row, col)
-    turn_pixel_on(row, col + 1)
-  end
-
-  def update_south(row, col)
-    turn_pixel_on(row + 1, col)
-  end
-
-  def update_west(row, col)
-    turn_pixel_on(row, col - 1)
   end
 
   def in_bounds?(row, col)
