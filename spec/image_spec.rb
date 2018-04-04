@@ -50,143 +50,136 @@ RSpec.describe Image do
   end
 
   context 'blurring an image' do
-    let(:arr_3x3) {[
-      [0, 0, 0],
-      [0, 1, 0],
-      [0, 0, 1]
+    let(:normal_array) {[
+      [1, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
+      [1, 0, 1, 0, 0],
+      [0, 0, 0, 0, 1],
+      [0, 0, 0, 0, 0],
     ]}
 
-    let(:blurred) {[
-      [0, 1, 0],
-      [1, 1, 1],
-      [0, 1, 1]
+    let(:blurred_array) {[
+      [1, 1, 0, 0, 0],
+      [1, 0, 1, 0, 0],
+      [1, 1, 1, 1, 1],
+      [1, 0, 1, 1, 1],
+      [0, 0, 0, 0, 1],
     ]}
 
-    let(:coordinates) { [[1, 1], [2, 2]] }
-    let(:first_coordinate) { coordinates[0] }
-    before(:each) { @image_3x3 = Image.new(arr_3x3) }
+    let(:coordinates) {[
+      [0, 0],
+      [2, 0],
+      [2, 2],
+      [3, 4],
+    ]}
+    let(:third_coordinate) { coordinates[2] }
+    before(:each) { @image = Image.new(normal_array) }
 
     describe '#blur' do
       before(:each) { @coordinate_count = coordinates.size }
 
       it "should call #pixel_coordinates" do
-        expect(@image_3x3).to receive(:pixel_coordinates) {coordinates}
-        @image_3x3.blur
+        expect(@image).to receive(:pixel_coordinates) {coordinates}
+        @image.blur
       end
 
       it "should call #update_coordinate_sides #{@coordinate_count} times" do
-        expect(@image_3x3).to receive(:update_coordinate_sides).exactly(@coordinate_count).times {coordinates}
-        @image_3x3.blur
+        expect(@image).to receive(:update_coordinate_sides).exactly(@coordinate_count).times {coordinates}
+        @image.blur
       end
 
       it "should blur the array correctly" do
-        @image_3x3.blur
-        expect(@image_3x3.image_array).to eq(blurred)
+        @image.blur
+        expect(@image.image_array).to eq(blurred_array)
       end
     end
 
     describe '#pixel_coordinates' do
       it 'should find the correct pixel coordinates' do
-        expect(@image_3x3.pixel_coordinates).to eq(coordinates)
+        expect(@image.pixel_coordinates).to eq(coordinates)
       end
     end
 
     describe '#update_coordinate_sides' do
       it "should call #update_north, #update_east, #update_south, #update_west" do
-        expect(@image_3x3).to receive(:update_north) {coordinates}
-        expect(@image_3x3).to receive(:update_east) {coordinates}
-        expect(@image_3x3).to receive(:update_south) {coordinates}
-        expect(@image_3x3).to receive(:update_west) {coordinates}
-        @image_3x3.update_coordinate_sides(first_coordinate)
+        expect(@image).to receive(:update_north) {coordinates}
+        expect(@image).to receive(:update_east) {coordinates}
+        expect(@image).to receive(:update_south) {coordinates}
+        expect(@image).to receive(:update_west) {coordinates}
+        @image.update_coordinate_sides(third_coordinate)
       end
     end
 
     context "updating pixels" do
-      let(:first_row) { first_coordinate[0] }
-      let(:first_col) { first_coordinate[1] }
+      let(:row) { third_coordinate[0] }
+      let(:col) { third_coordinate[1] }
 
       describe '#update_north' do
-        let(:blur_0_1_array) {[
-            [0, 1, 0],
-            [0, 1, 0],
-            [0, 0, 1]
-          ]}
+        let(:modified_row) { row - 1 }
 
         it "should call #turn_pixel_on" do
-          expect(@image_3x3).to receive(:turn_pixel_on).with(first_row - 1, first_col)
-          @image_3x3.update_north(first_row, first_col)
+          expect(@image).to receive(:turn_pixel_on).with(modified_row, col)
+          @image.update_north(row, col)
         end
 
-        it "should blur the 1st row, 2nd pixel" do
-          @image_3x3.update_north(first_row, first_col)
-          expect(@image_3x3.image_array).to eq(blur_0_1_array)
+        it "should blur the specified pixel" do
+          @image.update_north(row, col)
+          expect(@image.image_array[modified_row][col]).to eq(1)
         end
       end
 
       describe '#update_east' do
-        let(:blur_1_2_array) {[
-            [0, 0, 0],
-            [0, 1, 1],
-            [0, 0, 1]
-          ]}
+        let(:modified_col) { col + 1 }
 
         it "should call #turn_pixel_on" do
-          expect(@image_3x3).to receive(:turn_pixel_on).with(first_row, first_col + 1)
-          @image_3x3.update_east(first_row, first_col)
+          expect(@image).to receive(:turn_pixel_on).with(row, modified_col)
+          @image.update_east(row, col)
         end
 
-        it "should blur the 2nd row, 3rd pixel" do
-          @image_3x3.update_east(first_row, first_col)
-          expect(@image_3x3.image_array).to eq(blur_1_2_array)
+        it "should blur the specified pixel" do
+          @image.update_east(row, col)
+          expect(@image.image_array[col][modified_col]).to eq(1)
         end        
       end
 
       describe '#update_south' do
-        let(:blur_2_1_array) {[
-            [0, 0, 0],
-            [0, 1, 0],
-            [0, 1, 1]
-          ]}
+        let(:modified_row) { row + 1 }
 
         it "should call #turn_pixel_on" do
-          expect(@image_3x3).to receive(:turn_pixel_on).with(first_row + 1, first_col)
-          @image_3x3.update_south(first_row, first_col)
+          expect(@image).to receive(:turn_pixel_on).with(modified_row, col)
+          @image.update_south(row, col)
         end
 
-        it "should blur the 3rd row, 2nd pixel" do
-          @image_3x3.update_south(first_row, first_col)
-          expect(@image_3x3.image_array).to eq(blur_2_1_array)
+        it "should blur the specified pixel" do
+          @image.update_south(row, col)
+          expect(@image.image_array[modified_row][col]).to eq(1)
         end        
       end
 
       describe '#update_west' do
-        let(:blur_1_0_array) {[
-            [0, 0, 0],
-            [1, 1, 0],
-            [0, 0, 1]
-          ]}
+        let(:modified_col) { col - 1 }
 
         it "should call #turn_pixel_on" do
-          expect(@image_3x3).to receive(:turn_pixel_on).with(first_row, first_col - 1)
-          @image_3x3.update_west(first_row, first_col)
+          expect(@image).to receive(:turn_pixel_on).with(row, modified_col)
+          @image.update_west(row, col)
         end
 
-        it "should blur the 2nd row, 1st pixel" do
-          @image_3x3.update_west(first_row, first_col)
-          expect(@image_3x3.image_array).to eq(blur_1_0_array)
+        it "should blur the specified pixel" do
+          @image.update_west(row, col)
+          expect(@image.image_array[row][modified_col]).to eq(1)
         end        
       end
 
       describe '#turn_pixel_on' do
         it "should call #in_bounds? on coordinate" do
-          expect(@image_3x3).to receive(:in_bounds?).with(first_row,first_col)
-          @image_3x3.turn_pixel_on(first_row, first_col)          
+          expect(@image).to receive(:in_bounds?).with(row,col)
+          @image.turn_pixel_on(row, col)          
         end
 
         it "should change pixel to 1" do
-          row_above = first_row - 1
-          @image_3x3.turn_pixel_on(row_above, first_col)
-          expect(@image_3x3.image_array[row_above][first_col]).to eq(1)
+          row_above = row - 1
+          @image.turn_pixel_on(row_above, col)
+          expect(@image.image_array[row_above][col]).to eq(1)
         end
       end
 
@@ -196,92 +189,31 @@ RSpec.describe Image do
 
         context "valid coordinate" do
           it "should return true" do
-            expect(@image_3x3.in_bounds?(valid_row, valid_col)).to be true
+            expect(@image.in_bounds?(valid_row, valid_col)).to be true
           end
         end
 
         context "invalid coordinate" do
-          let(:positive_invalid_row) { arr_3x3.size }
-          let(:positive_invalid_col) { arr_3x3[0].size }
+          let(:positive_invalid_row) { normal_array.size }
+          let(:positive_invalid_col) { normal_array[0].size }
           neggative_invalid_col = -1
           neggative_invalid_row = -1
 
           context "invalid rows" do
             it "should return false" do
-              expect(@image_3x3.in_bounds?(neggative_invalid_row, valid_col)).to be false
-              expect(@image_3x3.in_bounds?(positive_invalid_row, valid_col)).to be false
+              expect(@image.in_bounds?(neggative_invalid_row, valid_col)).to be false
+              expect(@image.in_bounds?(positive_invalid_row, valid_col)).to be false
             end
           end
 
           context "invalid columns" do
             it "shoud return false" do
-              expect(@image_3x3.in_bounds?(valid_row, neggative_invalid_col)).to be false
-              expect(@image_3x3.in_bounds?(valid_row, positive_invalid_col)).to be false
+              expect(@image.in_bounds?(valid_row, neggative_invalid_col)).to be false
+              expect(@image.in_bounds?(valid_row, positive_invalid_col)).to be false
             end
           end
         end
       end
     end
-
-      # it "should blur pixels right & left of the center pixel" do
-      #   # arrange
-      #   center_pixel_array = [
-      #     [0, 0, 0, 0, 0],
-      #     [0, 0, 0, 0, 0],
-      #     [0, 0, 1, 1, 0],
-      #     [0, 0, 0, 0, 0],
-      #     [0, 0, 0, 0, 0]
-      #   ]
-      #   blurred_array = [
-      #     [0, 0, 0, 0, 0],
-      #     [0, 0, 0, 0, 0],
-      #     [0, 1, 1, 1, 1],
-      #     [0, 0, 0, 0, 0],
-      #     [0, 0, 0, 0, 0]
-      #   ]
-      #   center_image = Image.new(center_pixel_array)
-
-        # act
-
-        # assert
-        # expect(center_image.blurred_image).to eq(blurred_array)
-      # end
-
-      # it "should blur top/right/bottom/left pixels of [1][3] & [3][1] pixels" do
-      #   # arrange
-      #   multi_pixel_array = [
-      #     [0,0,0,0,0],
-      #     [0,0,0,1,0],
-      #     [0,0,0,0,0],
-      #     [0,1,0,0,0],
-      #     [0,0,0,0,0]
-      #   ]
-      #   multi_image = Image.new(multi_pixel_array)
-      # end
-
-      # it "should blur the pixel to the right of the [3][0] pixel" do
-      #   # arrange
-      #   edge_pixel_array = [
-      #     [0,0,0,0,0],
-      #     [0,0,0,0,0],
-      #     [0,0,0,0,0],
-      #     [1,0,0,0,0],
-      #     [0,0,0,0,0]
-      #   ]
-      #   blurred_array = [
-      #     [0,0,0,0,0],
-      #     [0,0,0,0,0],
-      #     [0,0,0,0,0],
-      #     [1,1,0,0,0],
-      #     [0,0,0,0,0]
-      #   ]
-      #   edge_image = Image.new(edge_pixel_array)
-
-      #   # act
-      #   edge_image.blur_image
-
-      #   # assert
-      #   expect(edge_image.blurred_image).to eq(blurred_array)
-      # end
   end
 end
