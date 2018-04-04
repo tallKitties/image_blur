@@ -50,6 +50,8 @@ RSpec.describe Image do
   end
 
   context 'blurring an image' do
+    let(:distance) { 1 }
+
     let(:normal_array) {[
       [1, 0, 0, 0, 0],
       [0, 0, 0, 0, 0],
@@ -74,16 +76,16 @@ RSpec.describe Image do
     ]}
   
     let(:third_coordinate) { coordinates[2] }
-    let(:distance) { 2 }
     before(:each) { @image = Image.new(normal_array) }
 
     describe '#blur' do
       # this doesn't set correctly
       before(:each) { @coordinate_count = coordinates.size }
 
-      it "should take an optional distance argument" do
+      it "should take an optional distance argument (integer)" do
         expect { @image.blur }.not_to raise_error
         expect { @image.blur(distance) }.not_to raise_error
+        expect { @image.blur('a').to raise_error(ArgumentError) }
       end
 
       it "should call #pixel_coordinates" do
@@ -91,8 +93,8 @@ RSpec.describe Image do
         @image.blur(distance)
       end
 
-      it "should call #update_coordinate_sides #{@coordinate_count} times" do
-        expect(@image).to receive(:update_coordinate_sides).exactly(@coordinate_count).times { coordinates }
+      it "should call #update_sides_of_coordinate #{@coordinate_count} times" do
+        expect(@image).to receive(:update_sides_of_coordinate).exactly(@coordinate_count).times { coordinates }
         @image.blur(distance)
       end
 
@@ -102,126 +104,136 @@ RSpec.describe Image do
       end
     end
 
-    describe '#pixel_coordinates' do
-      it 'should find the correct pixel coordinates' do
-        expect(@image.pixel_coordinates).to eq(coordinates)
-      end
-    end
+    # describe '#pixel_coordinates' do
+    #   it 'should find the correct pixel coordinates' do
+    #     expect(@image.pixel_coordinates).to eq(coordinates)
+    #   end
+    # end
 
-    describe '#update_coordinate_sides' do
-      it "should call #update_north, #update_east, #update_south, #update_west" do
-        expect(@image).to receive(:update_north) { coordinates }
-        expect(@image).to receive(:update_east) { coordinates }
-        expect(@image).to receive(:update_south) { coordinates }
-        expect(@image).to receive(:update_west) { coordinates }
-        @image.update_coordinate_sides(third_coordinate)
-      end
-    end
+    # describe '#update_sides_of_coordinate' do
+    #   it "should call #update_north, #update_east, #update_south, #update_west 2 times" do
+    #     expect(@image).to receive(:update_north).exactly(distance).times { coordinates }
+    #     expect(@image).to receive(:update_east).exactly(distance).times { coordinates }
+    #     expect(@image).to receive(:update_south).exactly(distance).times { coordinates }
+    #     expect(@image).to receive(:update_west).exactly(distance).times { coordinates }
+    #     @image.instance_variable_set(:@distance, distance)
+    #     @image.update_sides_of_coordinate(third_coordinate)
+    #   end
 
-    context "while updating pixels" do
-      let(:row) { third_coordinate[0] }
-      let(:col) { third_coordinate[1] }
+    #   it "should call #coordinates_to_update 2 times" do
+    #     distance.downto(1) do |d|
+    #       expect(@image).to receive(:coordinates_to_update).with(d, third_coordinate)
+    #     end
 
-      describe '#update_north' do
-        let(:modified_row) { row - 1 }
+    #     @image.instance_variable_set(:@distance, distance)
+    #     @image.update_sides_of_coordinate(third_coordinate)
+    #   end
+    # end
 
-        it "should call #turn_pixel_on" do
-          expect(@image).to receive(:turn_pixel_on).with(modified_row, col)
-          @image.update_north(row, col)
-        end
+    # context "while updating pixels" do
+    #   let(:row) { third_coordinate[0] }
+    #   let(:col) { third_coordinate[1] }
 
-        it "should blur the specified pixel" do
-          @image.update_north(row, col)
-          expect(@image.image_array[modified_row][col]).to eq(1)
-        end
-      end
+    #   describe '#update_north' do
+    #     let(:modified_row) { row - 1 }
 
-      describe '#update_east' do
-        let(:modified_col) { col + 1 }
+    #     it "should call #turn_pixel_on" do
+    #       expect(@image).to receive(:turn_pixel_on).with(modified_row, col)
+    #       @image.update_north(row, col)
+    #     end
 
-        it "should call #turn_pixel_on" do
-          expect(@image).to receive(:turn_pixel_on).with(row, modified_col)
-          @image.update_east(row, col)
-        end
+    #     it "should blur the specified pixel" do
+    #       @image.update_north(row, col)
+    #       expect(@image.image_array[modified_row][col]).to eq(1)
+    #     end
+    #   end
 
-        it "should blur the specified pixel" do
-          @image.update_east(row, col)
-          expect(@image.image_array[col][modified_col]).to eq(1)
-        end        
-      end
+    #   describe '#update_east' do
+    #     let(:modified_col) { col + 1 }
 
-      describe '#update_south' do
-        let(:modified_row) { row + 1 }
+    #     it "should call #turn_pixel_on" do
+    #       expect(@image).to receive(:turn_pixel_on).with(row, modified_col)
+    #       @image.update_east(row, col)
+    #     end
 
-        it "should call #turn_pixel_on" do
-          expect(@image).to receive(:turn_pixel_on).with(modified_row, col)
-          @image.update_south(row, col)
-        end
+    #     it "should blur the specified pixel" do
+    #       @image.update_east(row, col)
+    #       expect(@image.image_array[col][modified_col]).to eq(1)
+    #     end        
+    #   end
 
-        it "should blur the specified pixel" do
-          @image.update_south(row, col)
-          expect(@image.image_array[modified_row][col]).to eq(1)
-        end        
-      end
+    #   describe '#update_south' do
+    #     let(:modified_row) { row + 1 }
 
-      describe '#update_west' do
-        let(:modified_col) { col - 1 }
+    #     it "should call #turn_pixel_on" do
+    #       expect(@image).to receive(:turn_pixel_on).with(modified_row, col)
+    #       @image.update_south(row, col)
+    #     end
 
-        it "should call #turn_pixel_on" do
-          expect(@image).to receive(:turn_pixel_on).with(row, modified_col)
-          @image.update_west(row, col)
-        end
+    #     it "should blur the specified pixel" do
+    #       @image.update_south(row, col)
+    #       expect(@image.image_array[modified_row][col]).to eq(1)
+    #     end        
+    #   end
 
-        it "should blur the specified pixel" do
-          @image.update_west(row, col)
-          expect(@image.image_array[row][modified_col]).to eq(1)
-        end        
-      end
+    #   describe '#update_west' do
+    #     let(:modified_col) { col - 1 }
 
-      describe '#turn_pixel_on' do
-        it "should call #in_bounds? on coordinate" do
-          expect(@image).to receive(:in_bounds?).with(row,col)
-          @image.turn_pixel_on(row, col)          
-        end
+    #     it "should call #turn_pixel_on" do
+    #       expect(@image).to receive(:turn_pixel_on).with(row, modified_col)
+    #       @image.update_west(row, col)
+    #     end
 
-        it "should change pixel to 1" do
-          row_above = row - 1
-          @image.turn_pixel_on(row_above, col)
-          expect(@image.image_array[row_above][col]).to eq(1)
-        end
-      end
+    #     it "should blur the specified pixel" do
+    #       @image.update_west(row, col)
+    #       expect(@image.image_array[row][modified_col]).to eq(1)
+    #     end        
+    #   end
 
-      describe '#in_bounds?' do
-        let(:valid_row) { coordinates[0][0] }
-        let(:valid_col) { coordinates[0][1] }
+    #   describe '#turn_pixel_on' do
+    #     it "should call #in_bounds? on coordinate" do
+    #       expect(@image).to receive(:in_bounds?).with(row,col)
+    #       @image.turn_pixel_on(row, col)          
+    #     end
 
-        context "valid coordinate" do
-          it "should return true" do
-            expect(@image.in_bounds?(valid_row, valid_col)).to be true
-          end
-        end
+    #     it "should change pixel to 1" do
+    #       row_above = row - 1
+    #       @image.turn_pixel_on(row_above, col)
+    #       expect(@image.image_array[row_above][col]).to eq(1)
+    #     end
+    #   end
 
-        context "with an invalid coordinate" do
-          let(:positive_invalid_row) { normal_array.size }
-          let(:positive_invalid_col) { normal_array[0].size }
-          neggative_invalid_col = -1
-          neggative_invalid_row = -1
+    #   describe '#in_bounds?' do
+    #     let(:valid_row) { coordinates[0][0] }
+    #     let(:valid_col) { coordinates[0][1] }
 
-          context "containing invalid rows" do
-            it "should return false" do
-              expect(@image.in_bounds?(neggative_invalid_row, valid_col)).to be false
-              expect(@image.in_bounds?(positive_invalid_row, valid_col)).to be false
-            end
-          end
+    #     context "valid coordinate" do
+    #       it "should return true" do
+    #         expect(@image.in_bounds?(valid_row, valid_col)).to be true
+    #       end
+    #     end
 
-          context "containing invalid columns" do
-            it "shoud return false" do
-              expect(@image.in_bounds?(valid_row, neggative_invalid_col)).to be false
-              expect(@image.in_bounds?(valid_row, positive_invalid_col)).to be false
-            end
-          end
-        end
-      end
-    end
+    #     context "with an invalid coordinate" do
+    #       let(:positive_invalid_row) { normal_array.size }
+    #       let(:positive_invalid_col) { normal_array[0].size }
+    #       neggative_invalid_col = -1
+    #       neggative_invalid_row = -1
+
+    #       context "containing invalid rows" do
+    #         it "should return false" do
+    #           expect(@image.in_bounds?(neggative_invalid_row, valid_col)).to be false
+    #           expect(@image.in_bounds?(positive_invalid_row, valid_col)).to be false
+    #         end
+    #       end
+
+    #       context "containing invalid columns" do
+    #         it "shoud return false" do
+    #           expect(@image.in_bounds?(valid_row, neggative_invalid_col)).to be false
+    #           expect(@image.in_bounds?(valid_row, positive_invalid_col)).to be false
+    #         end
+    #       end
+    #     end
+    #   end
+    # end
   end
 end
