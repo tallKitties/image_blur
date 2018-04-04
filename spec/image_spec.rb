@@ -82,10 +82,16 @@ RSpec.describe Image do
       # this doesn't set correctly
       before(:each) { @coordinate_count = coordinates.size }
 
-      it "should take an optional distance argument (integer)" do
+      it "should take an optional distance argument as an integer" do
         expect { @image.blur }.not_to raise_error
         expect { @image.blur(distance) }.not_to raise_error
         expect { @image.blur('a').to raise_error(ArgumentError) }
+      end
+
+      it "should set @distance to the argument given" do
+        expect(@image.instance_variable_get(:@distance)).to eq(1)
+        @image.blur(distance)
+        expect(@image.instance_variable_get(:@distance)).to eq(distance)
       end
 
       it "should call #pixel_coordinates" do

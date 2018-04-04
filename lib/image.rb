@@ -17,8 +17,8 @@ class Image
 
   def blur(distance = nil)
     @distance = distance.nil? ? @distance : distance + 0
-    pixel_coordinates.each do |pixel|
-      update_sides_of_coordinate(pixel)
+    pixel_coordinates.each do |pixel_COORD|
+      update_sides_of_coordinate(pixel_COORD)
     end
   end
 
@@ -34,17 +34,17 @@ class Image
     coordinates
   end
 
-  def update_sides_of_coordinate(pixel)
-    row, col = pixel
+  def update_sides_of_coordinate(pixel_COORD)
+    row, col = pixel_COORD
     @distance.downto(1) do |d|
-      coordinates_to_update(d, pixel).each do |c|
+      coordinates_to_update(d, pixel_COORD).each do |c|
         turn_pixel_on(c[0], c[1])
       end
     end
   end
 
-  def coordinates_to_update(distance, pixel)
-    row, col = pixel
+  def coordinates_to_update(distance, pixel_COORD)
+    row, col = pixel_COORD
     # north, east, south, west
     [
       [row - distance, col],
