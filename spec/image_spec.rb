@@ -49,7 +49,7 @@ RSpec.describe Image do
     end
   end
 
-  context '#blur and its dependent methods' do
+  context 'blurring an image' do
     let(:arr_3x3) {[
       [0, 0, 0],
       [0, 1, 0],
@@ -62,6 +62,7 @@ RSpec.describe Image do
     ]}
     let(:coordinates) { [[1, 1], [2, 2]] }
     before(:each) { @image_3x3 = Image.new(arr_3x3) }
+    let(:first_coordinate) { coordinates[0] }
 
     describe '#blur' do
       before(:each) { @coordinate_count = coordinates.size }
@@ -71,8 +72,8 @@ RSpec.describe Image do
         @image_3x3.blur
       end
 
-      it "should call #update_north #{@coordinate_count} times" do
-        expect(@image_3x3).to receive(:update_north).exactly(@coordinate_count).times {coordinates}
+      it "should call #update_pixels #{@coordinate_count} times" do
+        expect(@image_3x3).to receive(:update_pixels).exactly(@coordinate_count).times {coordinates}
         @image_3x3.blur
       end
 
@@ -88,21 +89,30 @@ RSpec.describe Image do
       end
     end
 
+    describe '#update_pixels' do
+      it "should call #update_east" do
+        expect(@image_3x3).to receive(:update_east) {coordinates}
+        @image_3x3.update_pixels(first_coordinate)
+      end
+    end
+
     describe '#update_north' do
       let(:blur_0_1_array) {[
           [0, 1, 0],
           [0, 1, 0],
           [0, 0, 1]
         ]}
-      let(:first_coordinate) { coordinates[0] }
+      let(:first_row) { first_coordinate[0] }
+      let(:first_col) { first_coordinate[1] }
+
 
       it "should call #in_bounds? on coordinate" do
         expect(@image_3x3).to receive(:in_bounds?) { first_coordinate }
-        @image_3x3.update_north(first_coordinate)
+        @image_3x3.update_north(first_row, first_col)
       end
 
       it "should blur the 1st row, 2nd pixel" do
-        @image_3x3.update_north(first_coordinate)
+        @image_3x3.update_north(first_row, first_col)
         expect(@image_3x3.image_array).to eq(blur_0_1_array)
       end
     end
