@@ -18,7 +18,7 @@ class Image
 
   def blur
     pixel_coordinates.each do |coordinate|
-      update_pixels(coordinate)
+      update_coordinate_sides(coordinate)
     end
   end
 
@@ -32,7 +32,7 @@ class Image
     coordinates
   end
 
-  def update_pixels(coordinate)
+  def update_coordinate_sides(coordinate)
     row, col = coordinate
     update_north(row, col)
     update_east(row, col)
@@ -46,16 +46,19 @@ class Image
   end
 
   def update_east(row, col)
-    
+    col_to_change = col + 1
+    image_array[row][col_to_change] = 1 if in_bounds?(row, col_to_change)
   end
 
   def update_south(row, col)
-    
+    row_to_change = row + 1
+    image_array[row_to_change][col] = 1 if in_bounds?(row_to_change, col)    
   end
 
   def update_west(row, col)
-    
-  end  
+    col_to_change = col - 1
+    image_array[row][col_to_change] = 1 if in_bounds?(row, col_to_change)
+  end
 
   def in_bounds?(row, col)
     (0..image_array.size - 1).include?(row) && (0..image_array[row].size - 1).include?(col)
