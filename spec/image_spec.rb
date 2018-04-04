@@ -76,6 +76,7 @@ RSpec.describe Image do
     before(:each) { @image = Image.new(normal_array) }
 
     describe '#blur' do
+      # this doesn't set correctly
       before(:each) { @coordinate_count = coordinates.size }
 
       it "should call #pixel_coordinates" do
@@ -110,7 +111,7 @@ RSpec.describe Image do
       end
     end
 
-    context "updating pixels" do
+    context "while updating pixels" do
       let(:row) { third_coordinate[0] }
       let(:col) { third_coordinate[1] }
 
@@ -193,20 +194,20 @@ RSpec.describe Image do
           end
         end
 
-        context "invalid coordinate" do
+        context "with an invalid coordinate" do
           let(:positive_invalid_row) { normal_array.size }
           let(:positive_invalid_col) { normal_array[0].size }
           neggative_invalid_col = -1
           neggative_invalid_row = -1
 
-          context "invalid rows" do
+          context "containing invalid rows" do
             it "should return false" do
               expect(@image.in_bounds?(neggative_invalid_row, valid_col)).to be false
               expect(@image.in_bounds?(positive_invalid_row, valid_col)).to be false
             end
           end
 
-          context "invalid columns" do
+          context "containing invalid columns" do
             it "shoud return false" do
               expect(@image.in_bounds?(valid_row, neggative_invalid_col)).to be false
               expect(@image.in_bounds?(valid_row, positive_invalid_col)).to be false

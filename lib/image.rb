@@ -57,10 +57,7 @@ class Image
   end
 
   def in_bounds?(row, col)
-    image_size = image_array.size - 1
-    row_size = image_array[row].size - 1
-    
-    (0..image_size).include?(row) && (0..row_size).include?(col)
+    (0..image_array.size - 1).cover?(row) && (0..image_array[row].size - 1).cover?(col)
   end
 
   def turn_pixel_on(row, col)
