@@ -34,10 +34,11 @@ class Image
 
   def update_north(coordinate)
     row, col = coordinate
-    in_bounds?(row, col)
+    row_to_change = row - 1
+    image_array[row_to_change][col] = 1 if in_bounds?(row_to_change, col)
   end
 
   def in_bounds?(row, col)
-    true
+    (0..image_array.size - 1).include?(row) && (0..image_array[row].size - 1).include?(col)
   end
 end

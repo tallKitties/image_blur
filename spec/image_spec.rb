@@ -49,47 +49,92 @@ RSpec.describe Image do
     end
   end
 
-  context 'with 3 x 3 array' do
-    arr_3x3 = [
+  context '#blur and its dependent methods' do
+    let(:arr_3x3) {[
       [0, 0, 0],
       [0, 1, 0],
       [0, 0, 1]
-    ]
-    coordinates = [[1, 1], [2, 2]]
-
-    image_3x3 = Image.new(arr_3x3)
+    ]}
+    let(:blurred) {[
+      [0, 1, 0],
+      [0, 1, 1],
+      [0, 0, 1]
+    ]}
+    let(:coordinates) { [[1, 1], [2, 2]] }
+    before(:each) { @image_3x3 = Image.new(arr_3x3) }
 
     describe '#blur' do
+      before(:each) { @coordinate_count = coordinates.size }
+
       it "should call #pixel_coordinates" do
-        expect(image_3x3).to receive(:pixel_coordinates) {coordinates}
-        image_3x3.blur
+        expect(@image_3x3).to receive(:pixel_coordinates) {coordinates}
+        @image_3x3.blur
       end
 
-      it "should call #update_north #{coordinates.size} times" do
-        expect(image_3x3).to receive(:update_north).exactly(coordinates.size).times {coordinates}
-        image_3x3.blur
+      it "should call #update_north #{@coordinate_count} times" do
+        expect(@image_3x3).to receive(:update_north).exactly(@coordinate_count).times {coordinates}
+        @image_3x3.blur
+      end
+
+      it "should blur the array correctly" do
+        @image_3x3.blur
+        expect(@image_3x3.image_array).to eq(blurred)
       end
     end
 
     describe '#pixel_coordinates' do
       it 'should find the correct pixel coordinates' do
-        expect(image_3x3.pixel_coordinates).to eq(coordinates)
+        expect(@image_3x3.pixel_coordinates).to eq(coordinates)
       end
     end
 
     describe '#update_north' do
+      let(:blur_0_1_array) {[
+          [0, 1, 0],
+          [0, 1, 0],
+          [0, 0, 1]
+        ]}
+      let(:first_coordinate) { coordinates[0] }
+
       it "should call #in_bounds? on coordinate" do
-        first_coordinate = coordinates[0]
-        expect(image_3x3).to receive(:in_bounds?) {first_coordinate}
-        image_3x3.update_north(first_coordinate)
+        expect(@image_3x3).to receive(:in_bounds?) { first_coordinate }
+        @image_3x3.update_north(first_coordinate)
+      end
+
+      it "should blur the 1st row, 2nd pixel" do
+        @image_3x3.update_north(first_coordinate)
+        expect(@image_3x3.image_array).to eq(blur_0_1_array)
       end
     end
 
     describe '#in_bounds?' do
+      let(:valid_row) { coordinates[0][0] }
+      let(:valid_col) { coordinates[0][1] }
+
       context "valid coordinate" do
-        row, col = [1,1]
         it "should return true" do
-          expect(image_3x3.in_bounds?(row, col)).to be true
+          expect(@image_3x3.in_bounds?(valid_row, valid_col)).to be true
+        end
+      end
+
+      context "invalid coordinate" do
+        let(:positive_invalid_row) { arr_3x3.size }
+        let(:positive_invalid_col) { arr_3x3[0].size }
+        neggative_invalid_col = -1
+        neggative_invalid_row = -1
+
+        context "invalid rows" do
+          it "should return false" do
+            expect(@image_3x3.in_bounds?(neggative_invalid_row, valid_col)).to be false
+            expect(@image_3x3.in_bounds?(positive_invalid_row, valid_col)).to be false
+          end
+        end
+
+        context "invalid columns" do
+          it "shoud return false" do
+            expect(@image_3x3.in_bounds?(valid_row, neggative_invalid_col)).to be false
+            expect(@image_3x3.in_bounds?(valid_row, positive_invalid_col)).to be false
+          end
         end
       end
     end
