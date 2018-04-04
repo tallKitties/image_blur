@@ -6,8 +6,7 @@ class Image
 
   def initialize(image_array)
     @image_array = image_array
-    # @blurred_image = image_array.map(&:clone)
-    # @num_of_rows = image_array.length
+    @distance = 1
   end
 
   def output_image
@@ -16,7 +15,8 @@ class Image
     end
   end
 
-  def blur
+  def blur(distance = nil)
+    @distance = distance.nil? ? @distance : distance
     pixel_coordinates.each do |coordinate|
       update_coordinate_sides(coordinate)
     end

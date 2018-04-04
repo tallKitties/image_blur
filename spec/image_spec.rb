@@ -55,7 +55,7 @@ RSpec.describe Image do
       [0, 0, 0, 0, 0],
       [1, 0, 1, 0, 0],
       [0, 0, 0, 0, 1],
-      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0]
     ]}
 
     let(:blurred_array) {[
@@ -63,34 +63,41 @@ RSpec.describe Image do
       [1, 0, 1, 0, 0],
       [1, 1, 1, 1, 1],
       [1, 0, 1, 1, 1],
-      [0, 0, 0, 0, 1],
+      [0, 0, 0, 0, 1]
     ]}
 
     let(:coordinates) {[
       [0, 0],
       [2, 0],
       [2, 2],
-      [3, 4],
+      [3, 4]
     ]}
+  
     let(:third_coordinate) { coordinates[2] }
+    let(:distance) { 2 }
     before(:each) { @image = Image.new(normal_array) }
 
     describe '#blur' do
       # this doesn't set correctly
       before(:each) { @coordinate_count = coordinates.size }
 
+      it "should take an optional distance argument" do
+        expect { @image.blur }.not_to raise_error
+        expect { @image.blur(distance) }.not_to raise_error
+      end
+
       it "should call #pixel_coordinates" do
-        expect(@image).to receive(:pixel_coordinates) {coordinates}
-        @image.blur
+        expect(@image).to receive(:pixel_coordinates) { coordinates }
+        @image.blur(distance)
       end
 
       it "should call #update_coordinate_sides #{@coordinate_count} times" do
-        expect(@image).to receive(:update_coordinate_sides).exactly(@coordinate_count).times {coordinates}
-        @image.blur
+        expect(@image).to receive(:update_coordinate_sides).exactly(@coordinate_count).times { coordinates }
+        @image.blur(distance)
       end
 
       it "should blur the array correctly" do
-        @image.blur
+        @image.blur(distance)
         expect(@image.image_array).to eq(blurred_array)
       end
     end
@@ -103,10 +110,10 @@ RSpec.describe Image do
 
     describe '#update_coordinate_sides' do
       it "should call #update_north, #update_east, #update_south, #update_west" do
-        expect(@image).to receive(:update_north) {coordinates}
-        expect(@image).to receive(:update_east) {coordinates}
-        expect(@image).to receive(:update_south) {coordinates}
-        expect(@image).to receive(:update_west) {coordinates}
+        expect(@image).to receive(:update_north) { coordinates }
+        expect(@image).to receive(:update_east) { coordinates }
+        expect(@image).to receive(:update_south) { coordinates }
+        expect(@image).to receive(:update_west) { coordinates }
         @image.update_coordinate_sides(third_coordinate)
       end
     end
