@@ -41,26 +41,26 @@ class Image
   end
 
   def update_north(row, col)
-    row_to_change = row - 1
-    image_array[row_to_change][col] = 1 if in_bounds?(row_to_change, col)
+    turn_pixel_on(row - 1, col)
   end
 
   def update_east(row, col)
-    col_to_change = col + 1
-    image_array[row][col_to_change] = 1 if in_bounds?(row, col_to_change)
+    turn_pixel_on(row, col + 1)
   end
 
   def update_south(row, col)
-    row_to_change = row + 1
-    image_array[row_to_change][col] = 1 if in_bounds?(row_to_change, col)    
+    turn_pixel_on(row + 1, col)
   end
 
   def update_west(row, col)
-    col_to_change = col - 1
-    image_array[row][col_to_change] = 1 if in_bounds?(row, col_to_change)
+    turn_pixel_on(row, col - 1)
   end
 
   def in_bounds?(row, col)
     (0..image_array.size - 1).include?(row) && (0..image_array[row].size - 1).include?(col)
+  end
+
+  def turn_pixel_on(row, col)
+    image_array[row][col] = 1 if in_bounds?(row, col)
   end
 end

@@ -112,8 +112,8 @@ RSpec.describe Image do
             [0, 0, 1]
           ]}
 
-        it "should call #in_bounds? on coordinate" do
-          expect(@image_3x3).to receive(:in_bounds?) { first_coordinate }
+        it "should call #turn_pixel_on" do
+          expect(@image_3x3).to receive(:turn_pixel_on).with(first_row - 1, first_col)
           @image_3x3.update_north(first_row, first_col)
         end
 
@@ -130,9 +130,9 @@ RSpec.describe Image do
             [0, 0, 1]
           ]}
 
-        it "should call #in_bounds? on coordinate" do
-          expect(@image_3x3).to receive(:in_bounds?) { first_coordinate }
-          @image_3x3.update_east(first_row, first_col)          
+        it "should call #turn_pixel_on" do
+          expect(@image_3x3).to receive(:turn_pixel_on).with(first_row, first_col + 1)
+          @image_3x3.update_east(first_row, first_col)
         end
 
         it "should blur the 2nd row, 3rd pixel" do
@@ -148,9 +148,9 @@ RSpec.describe Image do
             [0, 1, 1]
           ]}
 
-        it "should call #in_bounds? on coordinate" do
-          expect(@image_3x3).to receive(:in_bounds?) { first_coordinate }
-          @image_3x3.update_south(first_row, first_col)          
+        it "should call #turn_pixel_on" do
+          expect(@image_3x3).to receive(:turn_pixel_on).with(first_row + 1, first_col)
+          @image_3x3.update_south(first_row, first_col)
         end
 
         it "should blur the 3rd row, 2nd pixel" do
@@ -166,45 +166,58 @@ RSpec.describe Image do
             [0, 0, 1]
           ]}
 
-        it "should call #in_bounds? on coordinate" do
-          expect(@image_3x3).to receive(:in_bounds?) { first_coordinate }
-          @image_3x3.update_west(first_row, first_col)          
+        it "should call #turn_pixel_on" do
+          expect(@image_3x3).to receive(:turn_pixel_on).with(first_row, first_col - 1)
+          @image_3x3.update_west(first_row, first_col)
         end
 
         it "should blur the 2nd row, 1st pixel" do
           @image_3x3.update_west(first_row, first_col)
           expect(@image_3x3.image_array).to eq(blur_1_0_array)
         end        
-      end      
-    end
+      end
 
-    describe '#in_bounds?' do
-      let(:valid_row) { coordinates[0][0] }
-      let(:valid_col) { coordinates[0][1] }
+      describe '#turn_pixel_on' do
+        it "should call #in_bounds? on coordinate" do
+          expect(@image_3x3).to receive(:in_bounds?).with(first_row,first_col)
+          @image_3x3.turn_pixel_on(first_row, first_col)          
+        end
 
-      context "valid coordinate" do
-        it "should return true" do
-          expect(@image_3x3.in_bounds?(valid_row, valid_col)).to be true
+        it "should change pixel to 1" do
+          row_above = first_row - 1
+          @image_3x3.turn_pixel_on(row_above, first_col)
+          expect(@image_3x3.image_array[row_above][first_col]).to eq(1)
         end
       end
 
-      context "invalid coordinate" do
-        let(:positive_invalid_row) { arr_3x3.size }
-        let(:positive_invalid_col) { arr_3x3[0].size }
-        neggative_invalid_col = -1
-        neggative_invalid_row = -1
+      describe '#in_bounds?' do
+        let(:valid_row) { coordinates[0][0] }
+        let(:valid_col) { coordinates[0][1] }
 
-        context "invalid rows" do
-          it "should return false" do
-            expect(@image_3x3.in_bounds?(neggative_invalid_row, valid_col)).to be false
-            expect(@image_3x3.in_bounds?(positive_invalid_row, valid_col)).to be false
+        context "valid coordinate" do
+          it "should return true" do
+            expect(@image_3x3.in_bounds?(valid_row, valid_col)).to be true
           end
         end
 
-        context "invalid columns" do
-          it "shoud return false" do
-            expect(@image_3x3.in_bounds?(valid_row, neggative_invalid_col)).to be false
-            expect(@image_3x3.in_bounds?(valid_row, positive_invalid_col)).to be false
+        context "invalid coordinate" do
+          let(:positive_invalid_row) { arr_3x3.size }
+          let(:positive_invalid_col) { arr_3x3[0].size }
+          neggative_invalid_col = -1
+          neggative_invalid_row = -1
+
+          context "invalid rows" do
+            it "should return false" do
+              expect(@image_3x3.in_bounds?(neggative_invalid_row, valid_col)).to be false
+              expect(@image_3x3.in_bounds?(positive_invalid_row, valid_col)).to be false
+            end
+          end
+
+          context "invalid columns" do
+            it "shoud return false" do
+              expect(@image_3x3.in_bounds?(valid_row, neggative_invalid_col)).to be false
+              expect(@image_3x3.in_bounds?(valid_row, positive_invalid_col)).to be false
+            end
           end
         end
       end
