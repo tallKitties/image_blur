@@ -2,6 +2,11 @@ require "spec_helper"
 require_relative "../lib/image"
 
 RSpec.describe Image do
+  distance = 2
+  if distance > 3 || distance < 1
+    raise ArgumentError, "distance (#{distance}) must be set to 1 - 3"
+  end
+
   describe '#initialize' do
     it "gives an 'Image' when created" do
       # arrange / act
@@ -50,29 +55,52 @@ RSpec.describe Image do
   end
 
   context 'blurring an image' do
-    let(:distance) { 1 }
-
     let(:normal_array) {[
-      [1, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [1, 0, 1, 0, 0],
-      [0, 0, 0, 0, 1],
-      [0, 0, 0, 0, 0]
+      [1, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 1],
+      [1, 0, 1, 0, 0, 0],
+      [0, 0, 0, 0, 1, 0],
+      [1, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 1]
     ]}
-
-    let(:blurred_array) {[
-      [1, 1, 0, 0, 0],
-      [1, 0, 1, 0, 0],
-      [1, 1, 1, 1, 1],
-      [1, 0, 1, 1, 1],
-      [0, 0, 0, 0, 1]
-    ]}
+    case distance
+    when 1
+      let(:blurred_array) {[
+        [1, 1, 0, 0, 0, 1],
+        [1, 0, 1, 0, 1, 1],
+        [1, 1, 1, 1, 1, 1],
+        [1, 0, 1, 1, 1, 1],
+        [1, 1, 0, 0, 1, 1],
+        [1, 0, 0, 0, 1, 1]
+      ]}
+    when 2
+      let(:blurred_array) {[
+        [1, 1, 1, 0, 0, 1],
+        [1, 0, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1],
+        [1, 0, 1, 1, 1, 1],
+        [1, 1, 1, 0, 1, 1],
+        [1, 0, 0, 1, 1, 1]
+      ]}
+    when 3
+      let(:blurred_array) {[
+        [1, 1, 1, 1, 1, 1],
+        [1, 0, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1],
+        [1, 0, 1, 1, 1, 1]
+      ]}
+    end
 
     let(:coordinates) {[
       [0, 0],
+      [1, 5],
       [2, 0],
       [2, 2],
-      [3, 4]
+      [3, 4],
+      [4, 0],
+      [5, 5]
     ]}
   
     let(:third_coordinate) { coordinates[2] }
