@@ -63,6 +63,7 @@ RSpec.describe Image do
       [1, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 1]
     ]}
+
     case distance
     when 1
       let(:blurred_array) {[
@@ -108,7 +109,6 @@ RSpec.describe Image do
 
     describe '#blur' do
       # this doesn't set correctly
-      before(:each) { @coordinate_count = coordinates.size }
 
       it "should take an optional distance argument as an integer" do
         expect { @image.blur }.not_to raise_error
@@ -116,25 +116,35 @@ RSpec.describe Image do
         expect { @image.blur('a').to raise_error(ArgumentError) }
       end
 
-      it "should set @distance to the argument given" do
-        expect(@image.instance_variable_get(:@distance)).to eq(1)
-        @image.blur(distance)
-        expect(@image.instance_variable_get(:@distance)).to eq(distance)
-      end
-
-      it "should call #pixel_coordinates" do
-        expect(@image).to receive(:pixel_coordinates) { coordinates }
-        @image.blur(distance)
-      end
-
-      it "should call #update_sides_of_coordinate #{@coordinate_count} times" do
-        expect(@image).to receive(:update_sides_of_coordinate).exactly(@coordinate_count).times { coordinates }
-        @image.blur(distance)
-      end
-
       it "should blur the array correctly" do
         @image.blur(distance)
         expect(@image.image_array).to eq(blurred_array)
+      end
+    end
+
+    describe '#pixel_coordinates' do
+      it 'should find the correct pixel coordinates' do
+        expect(@image.pixel_coordinates).to eq(coordinates)
+      end
+    end
+
+    context "while updating a single pixel coordinate" do
+      let(:row) { third_coordinate[0] }
+      let(:col) { third_coordinate[1] }
+
+      describe '#turn_pixel_on' do
+        it "should change pixel to 1" do
+          row_above = row - 1
+          col_right = col + 1
+          expect(@image.turn_pixel_on(row_above, col_right)).not_to be_nil
+        end
+
+        it "should not update an out of bound coordinate" do
+          out_of_bounds_row = -1
+          out_of_bounds_col = -1
+          expect(@image.turn_pixel_on(out_of_bounds_row, col)).to be_nil
+          expect(@image.turn_pixel_on(row, out_of_bounds_col)).to be_nil
+        end
       end
     end
   end

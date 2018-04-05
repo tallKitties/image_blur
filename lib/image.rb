@@ -1,8 +1,8 @@
 # require_relative "./image_blur/version"
-require "pry"
+require 'pry'
 
 class Image
-  attr_reader :image_array
+  attr_reader :image_array, :distance
 
   def initialize(image_array)
     @image_array = image_array
@@ -17,12 +17,10 @@ class Image
 
   def blur(distance = nil)
     @distance = distance.nil? ? @distance : distance + 0
-    pixel_coordinates.each do |pixel_COORD|
-      update_sides_of_coordinate(pixel_COORD)
+    pixel_coordinates.each do |pixel_coord|
+      update_sides_of_coordinate(pixel_coord)
     end
   end
-
-  private
 
   def pixel_coordinates
     coordinates = []
@@ -34,17 +32,22 @@ class Image
     coordinates
   end
 
-  def update_sides_of_coordinate(pixel_COORD)
-    row, col = pixel_COORD
+  def turn_pixel_on(row, col)
+    image_array[row][col] = 1 if in_bounds?(row, col)
+  end
+
+  private
+
+  def update_sides_of_coordinate(pixel_coord)
     @distance.downto(1) do |d|
-      coordinates_to_update(d, pixel_COORD).each do |c|
+      coordinates_to_update(d, pixel_coord).each do |c|
         turn_pixel_on(c[0], c[1])
       end
     end
   end
 
-  def coordinates_to_update(distance, pixel_COORD)
-    row, col = pixel_COORD
+  def coordinates_to_update(distance, pixel_coord)
+    row, col = pixel_coord
     # north, east, south, west
     [
       [row - distance, col],
@@ -55,10 +58,7 @@ class Image
   end
 
   def in_bounds?(row, col)
-    (0..image_array.size - 1).cover?(row) && (0..image_array[row].size - 1).cover?(col)
-  end
-
-  def turn_pixel_on(row, col)
-    image_array[row][col] = 1 if in_bounds?(row, col)
+    (0..image_array.size - 1).cover?(row) &&
+      (0..image_array[row].size - 1).cover?(col)
   end
 end
