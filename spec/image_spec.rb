@@ -54,97 +54,280 @@ RSpec.describe Image do
     end
   end
 
-  context 'blurring an image' do
-    let(:normal_array) {[
-      [1, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 1],
-      [1, 0, 1, 0, 0, 0],
-      [0, 0, 0, 0, 1, 0],
-      [1, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 1]
-    ]}
-
-    case distance
-    when 1
-      let(:blurred_array) {[
-        [1, 1, 0, 0, 0, 1],
-        [1, 0, 1, 0, 1, 1],
-        [1, 1, 1, 1, 1, 1],
-        [1, 0, 1, 1, 1, 1],
-        [1, 1, 0, 0, 1, 1],
-        [1, 0, 0, 0, 1, 1]
-      ]}
-    when 2
-      let(:blurred_array) {[
-        [1, 1, 1, 0, 0, 1],
-        [1, 0, 1, 1, 1, 1],
-        [1, 1, 1, 1, 1, 1],
-        [1, 0, 1, 1, 1, 1],
-        [1, 1, 1, 0, 1, 1],
-        [1, 0, 0, 1, 1, 1]
-      ]}
-    when 3
-      let(:blurred_array) {[
-        [1, 1, 1, 1, 1, 1],
-        [1, 0, 1, 1, 1, 1],
-        [1, 1, 1, 1, 1, 1],
-        [1, 1, 1, 1, 1, 1],
-        [1, 1, 1, 1, 1, 1],
-        [1, 0, 1, 1, 1, 1]
-      ]}
-    end
-
-    let(:coordinates) {[
-      [0, 0],
-      [1, 5],
-      [2, 0],
-      [2, 2],
-      [3, 4],
-      [4, 0],
-      [5, 5]
-    ]}
-  
-    let(:third_coordinate) { coordinates[2] }
-    before(:each) { @image = Image.new(normal_array) }
-
-    describe '#blur' do
-      # this doesn't set correctly
-
-      it "should take an optional distance argument as an integer" do
-        expect { @image.blur }.not_to raise_error
-        expect { @image.blur(distance) }.not_to raise_error
-        expect { @image.blur('a').to raise_error(ArgumentError) }
-      end
-
+  describe '#blur_NSEW' do
+    context 'with a default distance (1)' do
       it "should blur the array correctly" do
-        @image.blur(distance)
-        expect(@image.image_array).to eq(blurred_array)
+        normal_array = [
+          [1, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 1],
+          [1, 0, 1, 0, 0, 0],
+          [0, 0, 0, 0, 1, 0],
+          [1, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 1]
+        ]
+
+        blurred_array = [
+          [1, 1, 0, 0, 0, 1],
+          [1, 0, 1, 0, 1, 1],
+          [1, 1, 1, 1, 1, 1],
+          [1, 0, 1, 1, 1, 1],
+          [1, 1, 0, 0, 1, 1],
+          [1, 0, 0, 0, 1, 1]
+        ]
+        image = Image.new(normal_array)
+
+        image.blur_NSEW
+
+        expect(image.image_array).to eq(blurred_array)
       end
     end
 
-    describe '#pixel_coordinates' do
-      it 'should find the correct pixel coordinates' do
-        expect(@image.pixel_coordinates).to eq(coordinates)
+    context 'with a distance of 2' do
+      it "should blur the array correctly" do
+        normal_array = [
+          [1, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 1],
+          [1, 0, 1, 0, 0, 0],
+          [0, 0, 0, 0, 1, 0],
+          [1, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 1]
+        ]
+
+        blurred_array = [
+          [1, 1, 1, 0, 0, 1],
+          [1, 0, 1, 1, 1, 1],
+          [1, 1, 1, 1, 1, 1],
+          [1, 0, 1, 1, 1, 1],
+          [1, 1, 1, 0, 1, 1],
+          [1, 0, 0, 1, 1, 1]
+        ]
+        image = Image.new(normal_array)
+        distance = 2
+
+        image.blur_NSEW(distance)
+
+        expect(image.image_array).to eq(blurred_array)
+      end
+    end
+  end
+
+  describe '#pixel_coordinates' do
+    it 'should return the correct pixel coordinates' do
+      normal_array = [
+        [1, 0, 0],
+        [1, 0, 1],
+        [0, 1, 0]
+      ]
+      pixels = [
+        [0, 0],
+        [1, 0],
+        [1, 2],
+        [2, 1]
+      ]
+      image = Image.new(normal_array)
+
+      pixels_found = image.pixel_coordinates
+
+      expect(pixels_found).to eq(pixels)
+    end
+  end
+
+  describe '#update_north' do
+    it "should change the North pixel to 1" do
+      normal_array = [
+        [1, 0, 0],
+        [1, 0, 1],
+        [0, 1, 0]
+      ]
+      row = 2
+      col = 1
+      image = Image.new(normal_array)
+
+      image.update_north(row, col)
+
+      expect(image.image_array[row - 1][col]).to eq(1)
+    end
+
+    it "should change the pixel 2 rows North to 1" do
+      normal_array = [
+        [1, 0, 0],
+        [1, 0, 1],
+        [0, 1, 0]
+      ]
+      row = 2
+      col = 1
+      distance = 2
+      image = Image.new(normal_array)
+
+      image.update_north(row, col, distance)
+
+      expect(image.image_array[row - distance][col]).to eq(1)
+    end
+  end
+
+  describe '#update_south' do
+    it "should change the South pixel to 1" do
+      normal_array = [
+        [1, 0, 0],
+        [1, 0, 1],
+        [0, 1, 0]
+      ]
+      row = 0
+      col = 1
+      image = Image.new(normal_array)
+
+      image.update_south(row, col)
+
+      expect(image.image_array[row + 1][col]).to eq(1)        
+    end
+
+    it "should change the pixel 2 rows South to 1" do
+      normal_array = [
+        [1, 0, 0],
+        [1, 0, 1],
+        [0, 1, 0]
+      ]
+      row = 0
+      col = 2
+      distance = 2
+      image = Image.new(normal_array)
+
+      image.update_south(row, col, distance)
+
+      expect(image.image_array[row + distance][col]).to eq(1)
+    end
+  end
+
+  describe '#update_east' do
+    it "should change the East pixel to 1" do
+      normal_array = [
+        [1, 0, 0],
+        [1, 0, 1],
+        [0, 1, 0]
+      ]
+      row = 1
+      col = 0
+      image = Image.new(normal_array)
+
+      image.update_east(row, col)
+
+      expect(image.image_array[row][col + 1]).to eq(1)
+    end
+
+    it "should change the pixel 2 rows East to 1" do
+      normal_array = [
+        [1, 0, 0],
+        [1, 0, 1],
+        [0, 1, 0]
+      ]
+      row = 0
+      col = 0
+      distance = 2
+      image = Image.new(normal_array)
+
+      image.update_east(row, col, distance)
+
+      expect(image.image_array[row][col + distance]).to eq(1)
+    end
+  end
+
+  describe '#update_west' do
+    it "should change the West pixel to 1" do
+      normal_array = [
+        [1, 0, 0],
+        [1, 0, 1],
+        [0, 1, 0]
+      ]
+      row = 1
+      col = 2
+      image = Image.new(normal_array)
+
+      image.update_west(row, col)
+
+      expect(image.image_array[row][col - 1]).to eq(1)
+    end
+
+    it "should change the pixel 2 rows West to 1" do
+      normal_array = [
+        [1, 0, 0],
+        [1, 0, 1],
+        [0, 1, 0]
+      ]
+      row = 2
+      col = 2
+      distance = 2
+      image = Image.new(normal_array)
+
+      image.update_west(row, col, distance)
+
+      expect(image.image_array[row][col - distance]).to eq(1)
+    end
+  end
+
+  describe '#turn_pixel_on' do
+    context 'with valid coordinates' do
+      it 'should change pixel to 1' do
+        normal_array = [
+          [1, 0, 0],
+          [1, 0, 1],
+          [0, 1, 0]
+        ]
+        row = 1
+        col = 1
+        image = Image.new(normal_array)
+
+        image.turn_pixel_on(row, col)
+
+        expect(image.image_array[row][col]).to eq(1)
       end
     end
 
-    context "while updating a single pixel coordinate" do
-      let(:row) { third_coordinate[0] }
-      let(:col) { third_coordinate[1] }
+    context 'with invalid coordinates' do
+      it 'should not change pixel to 1' do
+        normal_array = [
+          [1, 0, 0],
+          [1, 0, 1],
+          [0, 1, 0]
+        ]
+        row = 0
+        col = -1
+        image = Image.new(normal_array)
 
-      describe '#turn_pixel_on' do
-        it "should change pixel to 1" do
-          row_above = row - 1
-          col_right = col + 1
-          expect(@image.turn_pixel_on(row_above, col_right)).not_to be_nil
-        end
+        image.turn_pixel_on(row, col)
 
-        it "should not update an out of bound coordinate" do
-          out_of_bounds_row = -1
-          out_of_bounds_col = -1
-          expect(@image.turn_pixel_on(out_of_bounds_row, col)).to be_nil
-          expect(@image.turn_pixel_on(row, out_of_bounds_col)).to be_nil
-        end
+        expect(image.image_array[row][col]).not_to eq(1)        
+      end
+    end
+  end
+
+  describe '#in_bounds?' do
+    context 'with valid coordinates' do
+      it 'should return true' do
+        normal_array = [
+          [1, 0, 0],
+          [1, 0, 1],
+          [0, 1, 0]
+        ]
+        row = 1
+        col = 1
+        image = Image.new(normal_array)
+
+        expect(image.in_bounds?(row, col)).to be true
+      end
+    end
+
+    context 'with invalid coordinates' do
+      it 'should return false' do
+        normal_array = [
+          [1, 0, 0],
+          [1, 0, 1],
+          [0, 1, 0]
+        ]
+        row = 0
+        col = -1
+        image = Image.new(normal_array)
+
+        expect(image.in_bounds?(row, col)).to be false
       end
     end
   end

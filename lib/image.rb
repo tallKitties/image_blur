@@ -6,7 +6,6 @@ class Image
 
   def initialize(image_array)
     @image_array = image_array
-    @distance = 1
   end
 
   def output_image
@@ -15,10 +14,11 @@ class Image
     end
   end
 
-  def blur(distance = nil)
-    @distance = distance.nil? ? @distance : distance + 0
+  def blur_NSEW(distance = 1)
     pixel_coordinates.each do |pixel_coord|
-      update_sides_of_coordinate(pixel_coord)
+      distance.downto(1) do |d|
+        update_NSEW(pixel_coord, d)
+      end
     end
   end
 
@@ -32,33 +32,38 @@ class Image
     coordinates
   end
 
+  def update_north(row, col, distance = 1)
+    turn_pixel_on(row - distance, col)
+  end
+
+  def update_south(row, col, distance = 1)
+    turn_pixel_on(row + distance, col)
+  end
+
+  def update_east(row, col, distance = 1)
+    turn_pixel_on(row, col + distance)
+  end
+
+  def update_west(row, col, distance = 1)
+    turn_pixel_on(row, col - distance)
+  end      
+
   def turn_pixel_on(row, col)
     image_array[row][col] = 1 if in_bounds?(row, col)
   end
 
+  def in_bounds?(row, col)
+    (0...image_array.size).cover?(row) &&
+      (0...image_array[row].size).cover?(col)
+  end
+
   private
 
-  def update_sides_of_coordinate(pixel_coord)
-    @distance.downto(1) do |d|
-      coordinates_to_update(d, pixel_coord).each do |c|
-        turn_pixel_on(c[0], c[1])
-      end
-    end
-  end
-
-  def coordinates_to_update(distance, pixel_coord)
+  def update_NSEW(pixel_coord, distance)
     row, col = pixel_coord
-    # north, east, south, west
-    [
-      [row - distance, col],
-      [row, col + distance],
-      [row + distance, col],
-      [row, col - distance]
-    ]
-  end
-
-  def in_bounds?(row, col)
-    (0..image_array.size - 1).cover?(row) &&
-      (0..image_array[row].size - 1).cover?(col)
+    update_north(row, col, distance)
+    update_south(row, col, distance)
+    update_east(row, col, distance)
+    update_west(row, col, distance)
   end
 end
