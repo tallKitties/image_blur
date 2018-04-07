@@ -55,10 +55,21 @@ class Image
     1.upto(height) { |h| update_north(coord, h) }
   end
 
+  def update_south_column(coord, height = 1)
+    1.upto(height) { |h| update_south(coord, h) }
+  end
+
   def update_northwest_corner(coord, manhattan_distance = 2)
     1.upto(manhattan_distance - 1) do |offset|
       height = manhattan_distance - offset
       update_north_column(coord.west(offset), height)
+    end
+  end
+
+  def update_northeast_corner(coord, manhattan_distance = 2)
+    1.upto(manhattan_distance - 1) do |offset|
+      height = manhattan_distance - offset
+      update_north_column(coord.east(offset), height)
     end
   end
 
