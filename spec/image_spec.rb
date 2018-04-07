@@ -43,7 +43,7 @@ RSpec.describe Image do
     end
   end
 
-  describe '#blur_NSEW' do
+  describe '#blur' do
     context 'with a default distance (1)' do
       it "should blur the array correctly" do
         normal_array = [
@@ -65,37 +65,37 @@ RSpec.describe Image do
         ]
         image = Image.new(normal_array)
 
-        image.blur_NSEW
+        image.blur
 
         expect(image.image_array).to eq(blurred_array)
       end
     end
 
     context 'with a distance of 2' do
-      it "should blur the array correctly" do
-        normal_array = [
-          [1, 0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0, 1],
-          [1, 0, 1, 0, 0, 0],
-          [0, 0, 0, 0, 1, 0],
-          [1, 0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0, 1]
-        ]
+      context 'and a single center pixel' do
+        it "should blur the array correctly" do
+          normal_array = [
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 1, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0]
+          ]
 
-        blurred_array = [
-          [1, 1, 1, 0, 0, 1],
-          [1, 0, 1, 1, 1, 1],
-          [1, 1, 1, 1, 1, 1],
-          [1, 0, 1, 1, 1, 1],
-          [1, 1, 1, 0, 1, 1],
-          [1, 0, 0, 1, 1, 1]
-        ]
-        image = Image.new(normal_array)
-        distance = 2
+          blurred_array = [
+            [0, 0, 1, 0, 0],
+            [0, 1, 1, 1, 0],
+            [1, 1, 1, 1, 1],
+            [0, 1, 1, 1, 0],
+            [0, 0, 1, 0, 0]
+          ]
+          image = Image.new(normal_array)
+          distance = 2
 
-        image.blur_NSEW(distance)
+          image.blur(distance)
 
-        expect(image.image_array).to eq(blurred_array)
+          expect(image.image_array).to eq(blurred_array)
+        end
       end
     end
   end
@@ -118,6 +118,26 @@ RSpec.describe Image do
       pixels_found = image.pixel_coordinates
 
       expect(pixels_found).to eq(pixels)
+    end
+  end
+
+  describe '#update_north_west' do
+    context 'with distance of 1' do
+      it 'should change the NW pixel to 1' do
+        normal_array = [
+          [0, 0, 0],
+          [0, 1, 0],
+          [0, 0, 0]
+        ]
+        row = 1
+        col = 1
+        image = Image.new(normal_array)
+        coord = Coordinate.new(row, col)
+
+        image.update_north_west(coord)
+
+        expect(image.image_array[row - 1][col - 1]).to eq(1)      
+      end
     end
   end
 

@@ -15,10 +15,12 @@ class Image
     end
   end
 
-  def blur_NSEW(distance = 1)
+  def blur(distance = 1)
     pixel_coordinates.each do |coord|
-      distance.downto(1) do |d|
-        update_NSEW(coord, d)
+      if distance > 1
+        big_blur(coord, distance)
+      else
+        update_NSEW(coord, distance)
       end
     end
   end
@@ -47,7 +49,12 @@ class Image
 
   def update_west(coord, distance = 1)
     turn_pixel_on(coord.west(distance))
-  end      
+  end
+
+  def update_north_west(coord, distance = 1)
+    coord_NW = coord.north(distance).west(distance)
+    turn_pixel_on(coord_NW)
+  end
 
   def turn_pixel_on(coord)
     image_array[coord.row][coord.col] = 1 if in_bounds?(coord)
@@ -59,6 +66,12 @@ class Image
   end
 
   private
+
+  def big_blur(coord, distance)
+    distance.times do |d|
+      update_north_west(coord, distance)
+    end
+  end
 
   def update_NSEW(coord, distance)
     update_north(coord, distance)
