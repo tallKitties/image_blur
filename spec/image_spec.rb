@@ -606,4 +606,48 @@ RSpec.describe Image do
       end
     end
   end
+
+  describe '#pixel_off?' do
+    it 'should return true if coordinate == 0' do
+      normal_array = [
+        [0, 0, 0],
+        [0, 1, 0],
+        [0, 0, 0]
+      ]
+      row = 1
+      col = 0
+      image = Image.new(normal_array)
+      coord = Coordinate.new(row, col)
+
+      expect(image.pixel_off?(coord)).to be true
+    end
+
+    it 'should return false if coordinate == 1' do
+      normal_array = [
+        [0, 0, 0],
+        [0, 1, 0],
+        [0, 0, 0]
+      ]
+      row = 1
+      col = 1
+      image = Image.new(normal_array)
+      coord = Coordinate.new(row, col)
+
+      expect(image.pixel_off?(coord)).to be false
+    end
+
+    it 'shoult return false if coordinate is out of bounds' do
+      normal_array = [
+        [0, 0, 0],
+        [0, 1, 0],
+        [0, 0, 0]
+      ]
+      row = 1
+      col = 1
+      image = Image.new(normal_array)
+      coord = Coordinate.new(row, col)
+
+      expect(image.pixel_off?(coord)).to be false      
+    end
+  end
 end

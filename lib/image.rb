@@ -72,7 +72,11 @@ class Image
   end  
 
   def turn_pixel_on(coord)
-    image_array[coord.row][coord.col] = 1 if in_bounds?(coord)
+    image_array[coord.row][coord.col] = 1 if pixel_off?(coord)
+  end
+
+  def pixel_off?(coord)
+    in_bounds?(coord) && image_array[coord.row][coord.col].zero?
   end
 
   def in_bounds?(coord)
