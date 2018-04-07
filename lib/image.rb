@@ -1,5 +1,6 @@
 # require_relative "./image_blur/version"
 require 'pry'
+require_relative './coordinate'
 
 class Image
   attr_reader :image_array, :distance
@@ -15,9 +16,9 @@ class Image
   end
 
   def blur_NSEW(distance = 1)
-    pixel_coordinates.each do |pixel_coord|
+    pixel_coordinates.each do |coord|
       distance.downto(1) do |d|
-        update_NSEW(pixel_coord, d)
+        update_NSEW(coord, d)
       end
     end
   end
@@ -26,44 +27,43 @@ class Image
     coordinates = []
     image_array.each_with_index do |row, row_index|
       row.each_with_index do |cell, cell_index|
-        coordinates << [row_index, cell_index] if cell == 1
+        coordinates << Coordinate.new(row_index, cell_index) if cell == 1
       end
     end
     coordinates
   end
 
-  def update_north(row, col, distance = 1)
-    turn_pixel_on(row - distance, col)
+  def update_north(coord, distance = 1)
+    turn_pixel_on(coord.north(distance))
   end
 
-  def update_south(row, col, distance = 1)
-    turn_pixel_on(row + distance, col)
+  def update_south(coord, distance = 1)
+    turn_pixel_on(coord.south(distance))
   end
 
-  def update_east(row, col, distance = 1)
-    turn_pixel_on(row, col + distance)
+  def update_east(coord, distance = 1)
+    turn_pixel_on(coord.east(distance))
   end
 
-  def update_west(row, col, distance = 1)
-    turn_pixel_on(row, col - distance)
+  def update_west(coord, distance = 1)
+    turn_pixel_on(coord.west(distance))
   end      
 
-  def turn_pixel_on(row, col)
-    image_array[row][col] = 1 if in_bounds?(row, col)
+  def turn_pixel_on(coord)
+    image_array[coord.row][coord.col] = 1 if in_bounds?(coord)
   end
 
-  def in_bounds?(row, col)
-    (0...image_array.size).cover?(row) &&
-      (0...image_array[row].size).cover?(col)
+  def in_bounds?(coord)
+    (0...image_array.size).cover?(coord.row) &&
+      (0...image_array[coord.row].size).cover?(coord.col)
   end
 
   private
 
-  def update_NSEW(pixel_coord, distance)
-    row, col = pixel_coord
-    update_north(row, col, distance)
-    update_south(row, col, distance)
-    update_east(row, col, distance)
-    update_west(row, col, distance)
+  def update_NSEW(coord, distance)
+    update_north(coord, distance)
+    update_south(coord, distance)
+    update_east(coord, distance)
+    update_west(coord, distance)
   end
 end

@@ -2,34 +2,23 @@ require "spec_helper"
 require_relative "../lib/image"
 
 RSpec.describe Image do
-  distance = 2
-  if distance > 3 || distance < 1
-    raise ArgumentError, "distance (#{distance}) must be set to 1 - 3"
-  end
-
   describe '#initialize' do
-    it "gives an 'Image' when created" do
-      # arrange / act
+    it "does not return nil" do
       image = Image.new([])
 
-      # assert
       expect(image).to_not be_nil
     end
 
-    it "sets 'image_array' to the array it's initialized with" do
-      # arrange
-      image = Image.new([1,2])
-
-      # act
-      result = image.image_array
-
-      # assert
-      expect(result).to eq([1,2])
+    it "throws an error if no array is provided" do
+      expect { Image.new }.to raise_error(ArgumentError)
     end
 
-    it "throws an error if no array is provided" do
-      # arrange / act / assert
-      expect { Image.new }.to raise_error(ArgumentError)
+    it "sets 'image_array' to the array it's initialized with" do
+      image = Image.new([1,2])
+
+      result = image.image_array
+
+      expect(result).to eq([1,2])
     end
   end
 
@@ -119,10 +108,10 @@ RSpec.describe Image do
         [0, 1, 0]
       ]
       pixels = [
-        [0, 0],
-        [1, 0],
-        [1, 2],
-        [2, 1]
+        Coordinate.new(0, 0),
+        Coordinate.new(1, 0),
+        Coordinate.new(1, 2),
+        Coordinate.new(2, 1)
       ]
       image = Image.new(normal_array)
 
@@ -142,8 +131,9 @@ RSpec.describe Image do
       row = 2
       col = 1
       image = Image.new(normal_array)
+      coord = Coordinate.new(row, col)
 
-      image.update_north(row, col)
+      image.update_north(coord)
 
       expect(image.image_array[row - 1][col]).to eq(1)
     end
@@ -158,8 +148,9 @@ RSpec.describe Image do
       col = 1
       distance = 2
       image = Image.new(normal_array)
+      coord = Coordinate.new(row, col)
 
-      image.update_north(row, col, distance)
+      image.update_north(coord, distance)
 
       expect(image.image_array[row - distance][col]).to eq(1)
     end
@@ -175,8 +166,9 @@ RSpec.describe Image do
       row = 0
       col = 1
       image = Image.new(normal_array)
+      coord = Coordinate.new(row, col)
 
-      image.update_south(row, col)
+      image.update_south(coord)
 
       expect(image.image_array[row + 1][col]).to eq(1)        
     end
@@ -191,8 +183,9 @@ RSpec.describe Image do
       col = 2
       distance = 2
       image = Image.new(normal_array)
+      coord = Coordinate.new(row, col)
 
-      image.update_south(row, col, distance)
+      image.update_south(coord, distance)
 
       expect(image.image_array[row + distance][col]).to eq(1)
     end
@@ -208,8 +201,9 @@ RSpec.describe Image do
       row = 1
       col = 0
       image = Image.new(normal_array)
+      coord = Coordinate.new(row, col)
 
-      image.update_east(row, col)
+      image.update_east(coord)
 
       expect(image.image_array[row][col + 1]).to eq(1)
     end
@@ -224,8 +218,9 @@ RSpec.describe Image do
       col = 0
       distance = 2
       image = Image.new(normal_array)
+      coord = Coordinate.new(row, col)
 
-      image.update_east(row, col, distance)
+      image.update_east(coord, distance)
 
       expect(image.image_array[row][col + distance]).to eq(1)
     end
@@ -241,8 +236,9 @@ RSpec.describe Image do
       row = 1
       col = 2
       image = Image.new(normal_array)
+      coord = Coordinate.new(row, col)
 
-      image.update_west(row, col)
+      image.update_west(coord)
 
       expect(image.image_array[row][col - 1]).to eq(1)
     end
@@ -257,8 +253,9 @@ RSpec.describe Image do
       col = 2
       distance = 2
       image = Image.new(normal_array)
+      coord = Coordinate.new(row, col)
 
-      image.update_west(row, col, distance)
+      image.update_west(coord, distance)
 
       expect(image.image_array[row][col - distance]).to eq(1)
     end
@@ -275,8 +272,9 @@ RSpec.describe Image do
         row = 1
         col = 1
         image = Image.new(normal_array)
+        coord = Coordinate.new(row, col)
 
-        image.turn_pixel_on(row, col)
+        image.turn_pixel_on(coord)
 
         expect(image.image_array[row][col]).to eq(1)
       end
@@ -292,8 +290,9 @@ RSpec.describe Image do
         row = 0
         col = -1
         image = Image.new(normal_array)
+        coord = Coordinate.new(row, col)
 
-        image.turn_pixel_on(row, col)
+        image.turn_pixel_on(coord)
 
         expect(image.image_array[row][col]).not_to eq(1)        
       end
@@ -311,8 +310,9 @@ RSpec.describe Image do
         row = 1
         col = 1
         image = Image.new(normal_array)
+        coord = Coordinate.new(row, col)
 
-        expect(image.in_bounds?(row, col)).to be true
+        expect(image.in_bounds?(coord)).to be true
       end
     end
 
@@ -326,8 +326,9 @@ RSpec.describe Image do
         row = 0
         col = -1
         image = Image.new(normal_array)
+        coord = Coordinate.new(row, col)
 
-        expect(image.in_bounds?(row, col)).to be false
+        expect(image.in_bounds?(coord)).to be false
       end
     end
   end
