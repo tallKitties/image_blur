@@ -78,32 +78,32 @@ class Image
 
   def update_northwest_corner(coord, manhattan_dist = 2)
     return if distance_too_small?(manhattan_dist, 2)
-    1.upto(manhattan_dist - 1) do |offset|
-      height = manhattan_dist - offset
+    (1...manhattan_dist).each do |height|
+      offset = manhattan_dist - height
       update_north_column(coord.west(offset), height)
     end
   end
 
   def update_northeast_corner(coord, manhattan_dist = 2)
     return if distance_too_small?(manhattan_dist, 2)
-    1.upto(manhattan_dist - 1) do |offset|
-      height = manhattan_dist - offset
+    (1...manhattan_dist).each do |height|
+      offset = manhattan_dist - height
       update_north_column(coord.east(offset), height)
     end
   end
 
   def update_southeast_corner(coord, manhattan_dist = 2)
     return if distance_too_small?(manhattan_dist, 2)
-    1.upto(manhattan_dist - 1) do |offset|
-      height = manhattan_dist - offset
+    (1...manhattan_dist).each do |height|
+      offset = manhattan_dist - height
       update_south_column(coord.east(offset), height)
     end
   end
 
   def update_southwest_corner(coord, manhattan_dist = 2)
     return if distance_too_small?(manhattan_dist, 2)
-    1.upto(manhattan_dist - 1) do |offset|
-      height = manhattan_dist - offset
+    (1...manhattan_dist).each do |height|
+      offset = manhattan_dist - height
       update_south_column(coord.west(offset), height)
     end
   end
