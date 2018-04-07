@@ -3,7 +3,7 @@ require 'pry'
 require_relative './coordinate'
 
 class Image
-  attr_reader :image_array, :distance
+  attr_reader :image_array
 
   def initialize(image_array)
     @image_array = image_array
@@ -51,25 +51,31 @@ class Image
     turn_pixel_on(coord.west(distance))
   end
 
-  def update_north_west(coord, distance = 1)
-    coord_NW = coord.north(distance).west(distance)
-    turn_pixel_on(coord_NW)
+  def update_north_column(coord, height = 1)
+    1.upto(height) { |h| update_north(coord, h) }
+  end
+
+  def update_northwest_corner(coord, manhattan_distance = 2)
+    1.upto(manhattan_distance - 1) do |offset|
+      height = manhattan_distance - offset
+      update_north_column(coord.west(offset), height)
+    end
   end
 
   def update_north_east(coord, distance = 1)
     coord_NE = coord.north(distance).east(distance)
     turn_pixel_on(coord_NE)
-  end  
+  end
 
   def update_south_east(coord, distance = 1)
     coord_SE = coord.south(distance).east(distance)
     turn_pixel_on(coord_SE)
-  end  
+  end
 
   def update_south_west(coord, distance = 1)
     coord_SW = coord.south(distance).west(distance)
     turn_pixel_on(coord_SW)
-  end  
+  end
 
   def turn_pixel_on(coord)
     image_array[coord.row][coord.col] = 1 if pixel_off?(coord)
@@ -89,13 +95,12 @@ class Image
   def big_blur(coord, distance)
     1.upto(distance) do |d|
       update_NSEW(coord, d)
-      update_corners(coord, d - 1)
-      # update_corners_with_offset(coord, d - 1)
+      update_corners(coord, d - 1) if d > 1
     end
   end
 
   def update_corners(coord, distance)
-    update_north_west(coord, distance)
+    update_northwest_corner(coord, distance)
     update_north_east(coord, distance)
     update_south_east(coord, distance)
     update_south_west(coord, distance)

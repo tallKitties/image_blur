@@ -101,65 +101,72 @@ RSpec.describe Image do
       context 'and multiple pixels' do
         it 'should blur the array correctly' do
           normal_array = [
-            [0, 0, 0, 0, 0, 0 ,0],
-            [0, 0, 0, 0, 0, 0 ,0],
-            [0, 0, 1, 0, 0, 0 ,0],
-            [0, 0, 0, 1, 0, 0 ,0],
-            [0, 0, 0, 0, 0, 0 ,0],
-            [0, 0, 0, 0, 0, 0 ,1],
-            [1, 0, 0, 0, 0, 0 ,0]
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 1, 0, 0, 0, 0],
+            [0, 0, 0, 1, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0]
           ]
 
           blurred_array = [
-            [0, 0, 1, 0, 0, 0 ,0],
-            [0, 1, 1, 1, 0, 0 ,0],
-            [1, 1, 1, 1, 1, 0 ,0],
-            [0, 1, 1, 1, 1, 1 ,1],
-            [1, 0, 1, 1, 1, 1 ,1],
-            [1, 1, 0, 1, 1, 1 ,1],
-            [1, 1, 1, 0, 0, 1 ,1]
+            [0, 0, 1, 0, 0, 0, 0],
+            [0, 1, 1, 1, 0, 0, 0],
+            [1, 1, 1, 1, 1, 0, 0],
+            [0, 1, 1, 1, 1, 1, 1],
+            [1, 0, 1, 1, 1, 1, 1],
+            [1, 1, 0, 1, 1, 1, 1],
+            [1, 1, 1, 0, 0, 1, 1]
           ]
           image = Image.new(normal_array)
           distance = 2
 
           image.blur(distance)
 
-          expect(image.image_array).to eq(blurred_array)          
+          expect(image.image_array).to eq(blurred_array)
         end
       end
     end
 
-    context 'with a distance of 3' do
+    context 'with a distance of 5' do
       context 'and a single center pixel' do
         it "should blur the array correctly" do
           normal_array = [
-            [0, 0, 0, 0, 0, 0 ,0],
-            [0, 0, 0, 0, 0, 0 ,0],
-            [0, 0, 0, 0, 0, 0 ,0],
-            [0, 0, 0, 1, 0, 0 ,0],
-            [0, 0, 0, 0, 0, 0 ,0],
-            [0, 0, 0, 0, 0, 0 ,0],
-            [0, 0, 0, 0, 0, 0 ,0]
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
           ]
-
           blurred_array = [
-            [0, 0, 0, 1, 0, 0 ,0],
-            [0, 0, 1, 1, 1, 0 ,0],
-            [0, 1, 1, 1, 1, 1 ,0],
-            [1, 1, 1, 1, 1, 1 ,1],
-            [0, 1, 1, 1, 1, 1 ,0],
-            [0, 0, 1, 1, 1, 0 ,0],
-            [0, 0, 0, 1, 0, 0 ,0]
+            [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
+            [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
+            [0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0],
+            [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+            [0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0],
+            [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
+            [0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0]
           ]
           image = Image.new(normal_array)
-          distance = 3
+          distance = 5
 
           image.blur(distance)
 
           expect(image.image_array).to eq(blurred_array)
         end
       end
-    end    
+    end
   end
 
   describe '#pixel_coordinates' do
@@ -181,218 +188,6 @@ RSpec.describe Image do
 
       expect(pixels_found).to eq(pixels)
     end
-  end
-
-  describe '#update_north_west' do
-    context 'with distance of 1' do
-      it 'should change the NW pixel to 1' do
-        normal_array = [
-          [0, 0, 0],
-          [0, 1, 0],
-          [0, 0, 0]
-        ]
-        expected_array = [
-          [1, 0, 0],
-          [0, 1, 0],
-          [0, 0, 0]
-        ]        
-        row = 1
-        col = 1
-        image = Image.new(normal_array)
-        coord = Coordinate.new(row, col)
-
-        image.update_north_west(coord)
-
-        expect(image.image_array).to eq(expected_array)      
-      end
-    end
-
-    context 'with distance of 2' do
-      it 'should change the NW pixel (diagonally 2 away) to 1' do
-        normal_array = [
-          [0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0],
-          [0, 0, 1, 0, 0],
-          [0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0]
-        ]
-        expected_array = [
-          [1, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0],
-          [0, 0, 1, 0, 0],
-          [0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0]
-        ]
-        row = 2
-        col = 2
-        distance = 2
-        image = Image.new(normal_array)
-        coord = Coordinate.new(row, col)
-
-        image.update_north_west(coord, distance)
-
-        expect(image.image_array).to eq(expected_array)      
-      end
-    end    
-  end
-
-  describe '#update_north_east' do
-    context 'with distance of 1' do
-      it 'should change the NE pixel to 1' do
-        normal_array = [
-          [0, 0, 0],
-          [0, 1, 0],
-          [0, 0, 0]
-        ]
-        expected_array = [
-          [0, 0, 1],
-          [0, 1, 0],
-          [0, 0, 0]
-        ]        
-        row = 1
-        col = 1
-        image = Image.new(normal_array)
-        coord = Coordinate.new(row, col)
-
-        image.update_north_east(coord)
-
-        expect(image.image_array).to eq(expected_array)      
-      end
-    end
-
-    context 'with distance of 2' do
-      it 'should change the NE pixel (diagonally 2 away) to 1' do
-        normal_array = [
-          [0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0],
-          [0, 0, 1, 0, 0],
-          [0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0]
-        ]
-        expected_array = [
-          [0, 0, 0, 0, 1],
-          [0, 0, 0, 0, 0],
-          [0, 0, 1, 0, 0],
-          [0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0]
-        ]
-        row = 2
-        col = 2
-        distance = 2
-        image = Image.new(normal_array)
-        coord = Coordinate.new(row, col)
-
-        image.update_north_east(coord, distance)
-
-        expect(image.image_array).to eq(expected_array)      
-      end
-    end    
-  end
-
-  describe '#update_south_east' do
-    context 'with distance of 1' do
-      it 'should change the SE pixel to 1' do
-        normal_array = [
-          [0, 0, 0],
-          [0, 1, 0],
-          [0, 0, 0]
-        ]
-        expected_array = [
-          [0, 0, 0],
-          [0, 1, 0],
-          [0, 0, 1]
-        ]        
-        row = 1
-        col = 1
-        image = Image.new(normal_array)
-        coord = Coordinate.new(row, col)
-
-        image.update_south_east(coord)
-
-        expect(image.image_array).to eq(expected_array)      
-      end
-    end
-
-    context 'with distance of 2' do
-      it 'should change the SE pixel (diagonally 2 away) to 1' do
-        normal_array = [
-          [0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0],
-          [0, 0, 1, 0, 0],
-          [0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0]
-        ]
-        expected_array = [
-          [0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0],
-          [0, 0, 1, 0, 0],
-          [0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 1]
-        ]
-        row = 2
-        col = 2
-        distance = 2
-        image = Image.new(normal_array)
-        coord = Coordinate.new(row, col)
-
-        image.update_south_east(coord, distance)
-
-        expect(image.image_array).to eq(expected_array)      
-      end
-    end    
-  end
-
-  describe '#update_south_west' do
-    context 'with distance of 1' do
-      it 'should change the SW pixel to 1' do
-        normal_array = [
-          [0, 0, 0],
-          [0, 1, 0],
-          [0, 0, 0]
-        ]
-        expected_array = [
-          [0, 0, 0],
-          [0, 1, 0],
-          [1, 0, 0]
-        ]        
-        row = 1
-        col = 1
-        image = Image.new(normal_array)
-        coord = Coordinate.new(row, col)
-
-        image.update_south_west(coord)
-
-        expect(image.image_array).to eq(expected_array)      
-      end
-    end
-
-    context 'with distance of 2' do
-      it 'should change the SW pixel (diagonally 2 away) to 1' do
-        normal_array = [
-          [0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0],
-          [0, 0, 1, 0, 0],
-          [0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0]
-        ]
-        expected_array = [
-          [0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0],
-          [0, 0, 1, 0, 0],
-          [0, 0, 0, 0, 0],
-          [1, 0, 0, 0, 0]
-        ]
-        row = 2
-        col = 2
-        distance = 2
-        image = Image.new(normal_array)
-        coord = Coordinate.new(row, col)
-
-        image.update_south_west(coord, distance)
-
-        expect(image.image_array).to eq(expected_array)      
-      end
-    end    
   end
 
   describe '#update_north' do
@@ -444,7 +239,7 @@ RSpec.describe Image do
 
       image.update_south(coord)
 
-      expect(image.image_array[row + 1][col]).to eq(1)        
+      expect(image.image_array[row + 1][col]).to eq(1)
     end
 
     it "should change the pixel 2 rows South to 1" do
@@ -535,6 +330,260 @@ RSpec.describe Image do
     end
   end
 
+  describe '#update_north_column' do
+    context 'with a distance of 4' do
+      it 'should change the 4 pixels above to 1' do
+        normal_array = [
+          [0],
+          [0],
+          [0],
+          [0],
+          [0]
+        ]
+        expected_array = [
+          [1],
+          [1],
+          [1],
+          [1],
+          [0]
+        ]
+        row = 4
+        col = 0
+        height = 4
+        image = Image.new(normal_array)
+        coord = Coordinate.new(row, col)
+
+        image.update_north_column(coord, height)
+
+        expect(image.image_array).to eq(expected_array)
+      end
+    end
+  end
+
+  describe '#update_northwest_corner' do
+    context 'with distance of 1' do
+      it 'should change the NW pixel to 1' do
+        normal_array = [
+          [0, 0, 0],
+          [0, 1, 0],
+          [0, 0, 0]
+        ]
+        expected_array = [
+          [1, 0, 0],
+          [0, 1, 0],
+          [0, 0, 0]
+        ]
+        row = 1
+        col = 1
+        image = Image.new(normal_array)
+        coord = Coordinate.new(row, col)
+
+        image.update_northwest_corner(coord)
+
+        expect(image.image_array).to eq(expected_array)
+      end
+    end
+
+    context 'with distance of 5' do
+      it 'should change the NW corner (manhattan distance of 5) to 1' do
+        normal_array = [
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ]
+        expected_array = [
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
+          [0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+          [0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ]
+        row = 5
+        col = 5
+        distance = 5
+        image = Image.new(normal_array)
+        coord = Coordinate.new(row, col)
+
+        image.update_northwest_corner(coord, distance)
+
+        expect(image.image_array).to eq(expected_array)
+      end
+    end
+  end
+
+  describe '#update_north_east' do
+    context 'with distance of 1' do
+      it 'should change the NE pixel to 1' do
+        normal_array = [
+          [0, 0, 0],
+          [0, 1, 0],
+          [0, 0, 0]
+        ]
+        expected_array = [
+          [0, 0, 1],
+          [0, 1, 0],
+          [0, 0, 0]
+        ]
+        row = 1
+        col = 1
+        image = Image.new(normal_array)
+        coord = Coordinate.new(row, col)
+
+        image.update_north_east(coord)
+
+        expect(image.image_array).to eq(expected_array)
+      end
+    end
+
+    context 'with distance of 2' do
+      it 'should change the NE pixel (diagonally 2 away) to 1' do
+        normal_array = [
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 1, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0]
+        ]
+        expected_array = [
+          [0, 0, 0, 0, 1],
+          [0, 0, 0, 0, 0],
+          [0, 0, 1, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0]
+        ]
+        row = 2
+        col = 2
+        distance = 2
+        image = Image.new(normal_array)
+        coord = Coordinate.new(row, col)
+
+        image.update_north_east(coord, distance)
+
+        expect(image.image_array).to eq(expected_array)
+      end
+    end
+  end
+
+  describe '#update_south_east' do
+    context 'with distance of 1' do
+      it 'should change the SE pixel to 1' do
+        normal_array = [
+          [0, 0, 0],
+          [0, 1, 0],
+          [0, 0, 0]
+        ]
+        expected_array = [
+          [0, 0, 0],
+          [0, 1, 0],
+          [0, 0, 1]
+        ]
+        row = 1
+        col = 1
+        image = Image.new(normal_array)
+        coord = Coordinate.new(row, col)
+
+        image.update_south_east(coord)
+
+        expect(image.image_array).to eq(expected_array)
+      end
+    end
+
+    context 'with distance of 2' do
+      it 'should change the SE pixel (diagonally 2 away) to 1' do
+        normal_array = [
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 1, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0]
+        ]
+        expected_array = [
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 1, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 1]
+        ]
+        row = 2
+        col = 2
+        distance = 2
+        image = Image.new(normal_array)
+        coord = Coordinate.new(row, col)
+
+        image.update_south_east(coord, distance)
+
+        expect(image.image_array).to eq(expected_array)
+      end
+    end
+  end
+
+  describe '#update_south_west' do
+    context 'with distance of 1' do
+      it 'should change the SW pixel to 1' do
+        normal_array = [
+          [0, 0, 0],
+          [0, 1, 0],
+          [0, 0, 0]
+        ]
+        expected_array = [
+          [0, 0, 0],
+          [0, 1, 0],
+          [1, 0, 0]
+        ]
+        row = 1
+        col = 1
+        image = Image.new(normal_array)
+        coord = Coordinate.new(row, col)
+
+        image.update_south_west(coord)
+
+        expect(image.image_array).to eq(expected_array)
+      end
+    end
+
+    context 'with distance of 2' do
+      it 'should change the SW pixel (diagonally 2 away) to 1' do
+        normal_array = [
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 1, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0]
+        ]
+        expected_array = [
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 1, 0, 0],
+          [0, 0, 0, 0, 0],
+          [1, 0, 0, 0, 0]
+        ]
+        row = 2
+        col = 2
+        distance = 2
+        image = Image.new(normal_array)
+        coord = Coordinate.new(row, col)
+
+        image.update_south_west(coord, distance)
+
+        expect(image.image_array).to eq(expected_array)
+      end
+    end
+  end
+
   describe '#turn_pixel_on' do
     context 'with valid coordinates' do
       it 'should change pixel to 1' do
@@ -568,7 +617,7 @@ RSpec.describe Image do
 
         image.turn_pixel_on(coord)
 
-        expect(image.image_array[row][col]).not_to eq(1)        
+        expect(image.image_array[row][col]).not_to eq(1)
       end
     end
   end
@@ -647,7 +696,7 @@ RSpec.describe Image do
       image = Image.new(normal_array)
       coord = Coordinate.new(row, col)
 
-      expect(image.pixel_off?(coord)).to be false      
+      expect(image.pixel_off?(coord)).to be false
     end
   end
 end
