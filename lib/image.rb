@@ -11,7 +11,7 @@ class Image
 
   def output_image
     image_array.each do |row|
-      puts row.join
+      puts row.join(' ')
     end
   end
 
@@ -36,37 +36,55 @@ class Image
   end
 
   def update_north(coord, distance = 1)
+    return if distance_too_small?(distance, 1)
     turn_pixel_on(coord.north(distance))
   end
 
   def update_south(coord, distance = 1)
+    return if distance_too_small?(distance, 1)
     turn_pixel_on(coord.south(distance))
   end
 
   def update_east(coord, distance = 1)
+    return if distance_too_small?(distance, 1)
     turn_pixel_on(coord.east(distance))
   end
 
   def update_west(coord, distance = 1)
+    return if distance_too_small?(distance, 1)
     turn_pixel_on(coord.west(distance))
   end
 
   def update_north_column(coord, height = 1)
+    return if distance_too_small?(height, 1)
     1.upto(height) { |h| update_north(coord, h) }
   end
 
   def update_south_column(coord, height = 1)
+    return if distance_too_small?(height, 1)
     1.upto(height) { |h| update_south(coord, h) }
   end
 
-  def update_northwest_corner(coord, radius = 2)
-    1.upto(radius - 1) do |offset|
-      height = radius - offset
+  def update_east_row(coord, width = 1)
+    return if distance_too_small?(width, 1)
+    1.upto(width) { |h| update_east(coord, h) }
+  end
+
+  def update_west_row(coord, width = 1)
+    return if distance_too_small?(width, 1)
+    1.upto(width) { |h| update_west(coord, h) }
+  end
+
+  def update_northwest_corner(coord, manhattan_dist = 2)
+    return if distance_too_small?(manhattan_dist, 2)
+    1.upto(manhattan_dist - 1) do |offset|
+      height = manhattan_dist - offset
       update_north_column(coord.west(offset), height)
     end
   end
 
   def update_northeast_corner(coord, manhattan_dist = 2)
+    return if distance_too_small?(manhattan_dist, 2)
     1.upto(manhattan_dist - 1) do |offset|
       height = manhattan_dist - offset
       update_north_column(coord.east(offset), height)
@@ -74,6 +92,7 @@ class Image
   end
 
   def update_southeast_corner(coord, manhattan_dist = 2)
+    return if distance_too_small?(manhattan_dist, 2)
     1.upto(manhattan_dist - 1) do |offset|
       height = manhattan_dist - offset
       update_south_column(coord.east(offset), height)
@@ -81,6 +100,7 @@ class Image
   end
 
   def update_southwest_corner(coord, manhattan_dist = 2)
+    return if distance_too_small?(manhattan_dist, 2)
     1.upto(manhattan_dist - 1) do |offset|
       height = manhattan_dist - offset
       update_south_column(coord.west(offset), height)
@@ -88,21 +108,25 @@ class Image
   end
 
   def update_northeast(coord, distance = 1)
+    return if distance_too_small?(distance, 1)
     coord_NE = coord.north(distance).east(distance)
     turn_pixel_on(coord_NE)
   end
 
   def update_northwest(coord, distance = 1)
+    return if distance_too_small?(distance, 1)
     coord_NE = coord.north(distance).west(distance)
     turn_pixel_on(coord_NE)
   end
 
   def update_southeast(coord, distance = 1)
+    return if distance_too_small?(distance, 1)
     coord_SE = coord.south(distance).east(distance)
     turn_pixel_on(coord_SE)
   end
 
   def update_southwest(coord, distance = 1)
+    return if distance_too_small?(distance, 1)
     coord_SW = coord.south(distance).west(distance)
     turn_pixel_on(coord_SW)
   end
@@ -121,6 +145,10 @@ class Image
   end
 
   private
+
+  def distance_too_small?(d, required)
+    d < required
+  end
 
   def big_blur(coord, radius)
     1.upto(radius) do |r|

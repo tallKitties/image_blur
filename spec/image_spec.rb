@@ -35,7 +35,7 @@ RSpec.describe Image do
     it "should print out each subarry as a string on a new line" do
       # assert
       image_array.each do |sub_arr|
-        allow(image).to receive(:puts).with(sub_arr.join)
+        allow(image).to receive(:puts).with(sub_arr.join(' '))
       end
 
       # act
@@ -384,6 +384,50 @@ RSpec.describe Image do
         coord = Coordinate.new(row, col)
 
         image.update_south_column(coord, height)
+
+        expect(image.image_array).to eq(expected_array)
+      end
+    end
+  end
+
+  describe '#update_east_row' do
+    context 'with a distance of 4' do
+      it 'should change the 4 pixels East to 1' do
+        normal_array = [
+          [0, 0, 0, 0, 0]
+        ]
+        expected_array = [
+          [0, 1, 1, 1, 1]
+        ]
+        row = 0
+        col = 0
+        width = 4
+        image = Image.new(normal_array)
+        coord = Coordinate.new(row, col)
+
+        image.update_east_row(coord, width)
+
+        expect(image.image_array).to eq(expected_array)
+      end
+    end
+  end
+
+  describe '#update_west_row' do
+    context 'with a distance of 4' do
+      it 'should change the 4 pixels West to 1' do
+        normal_array = [
+          [0, 0, 0, 0, 0]
+        ]
+        expected_array = [
+          [1, 1, 1, 1, 0]
+        ]
+        row = 0
+        col = 4
+        width = 4
+        image = Image.new(normal_array)
+        coord = Coordinate.new(row, col)
+
+        image.update_west_row(coord, width)
 
         expect(image.image_array).to eq(expected_array)
       end

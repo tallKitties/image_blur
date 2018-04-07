@@ -15,8 +15,8 @@
     - [#update_west](#update_west)
     - [#update_north_column](#update_north_column)
     - [#update_south_column](#update_south_column)
-    - [#update_east_column](#update_east_column)
-    - [#update_west_column](#update_west_column)
+    - [#update_east_row](#update_east_row)
+    - [#update_west_row](#update_west_row)
     - [#update_northeast](#update_northeast)
     - [#update_northwest](#update_northwest)
     - [#update_southeast](#update_southeast)
@@ -168,13 +168,13 @@ image.output_image
 * requires a [Coordinate](#coordinate) object
 * sets the column of pixels HEIGHT pixels South of the coordinate to 1
 
-#### #update_east_column
-* `#update_east_column(coord, [width = 1])`
+#### #update_east_row
+* `#update_east_row(coord, [width = 1])`
 * requires a [Coordinate](#coordinate) object
 * sets the row of pixels WIDTH pixels East of the coordinate to 1
 
-#### #update_west_column
-* `#update_west_column(coord, [width = 1])`
+#### #update_west_row
+* `#update_west_row(coord, [width = 1])`
 * requires a [Coordinate](#coordinate) object
 * sets the row of pixels WIDTH pixels West of the coordinate to 1
 
