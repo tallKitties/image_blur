@@ -56,6 +56,21 @@ class Image
     turn_pixel_on(coord_NW)
   end
 
+  def update_north_east(coord, distance = 1)
+    coord_NE = coord.north(distance).east(distance)
+    turn_pixel_on(coord_NE)
+  end  
+
+  def update_south_east(coord, distance = 1)
+    coord_SE = coord.south(distance).east(distance)
+    turn_pixel_on(coord_SE)
+  end  
+
+  def update_south_west(coord, distance = 1)
+    coord_SW = coord.south(distance).west(distance)
+    turn_pixel_on(coord_SW)
+  end  
+
   def turn_pixel_on(coord)
     image_array[coord.row][coord.col] = 1 if in_bounds?(coord)
   end
@@ -68,9 +83,18 @@ class Image
   private
 
   def big_blur(coord, distance)
-    distance.times do |d|
-      update_north_west(coord, distance)
+    1.upto(distance) do |d|
+      update_NSEW(coord, d)
+      update_corners(coord, d - 1)
+      # update_corners_with_offset(coord, d - 1)
     end
+  end
+
+  def update_corners(coord, distance)
+    update_north_west(coord, distance)
+    update_north_east(coord, distance)
+    update_south_east(coord, distance)
+    update_south_west(coord, distance)
   end
 
   def update_NSEW(coord, distance)
