@@ -585,6 +585,71 @@ RSpec.describe Image do
     end
   end
 
+  describe '#update_southwest_corner' do
+    context 'with manhattan distance of 2' do
+      it 'should change the SE pixel to 1' do
+        normal_array = [
+          [0, 0, 0],
+          [0, 1, 0],
+          [0, 0, 0]
+        ]
+        expected_array = [
+          [0, 0, 0],
+          [0, 1, 0],
+          [1, 0, 0]
+        ]
+        row = 1
+        col = 1
+        image = Image.new(normal_array)
+        coord = Coordinate.new(row, col)
+
+        image.update_southwest_corner(coord)
+
+        expect(image.image_array).to eq(expected_array)
+      end
+    end
+
+    context 'with distance of 5' do
+      it 'should change the SE corner (manhattan distance of 5) to 1' do
+        normal_array = [
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ]
+        expected_array = [
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+          [0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+          [0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ]
+        row = 5
+        col = 5
+        distance = 5
+        image = Image.new(normal_array)
+        coord = Coordinate.new(row, col)
+
+        image.update_southwest_corner(coord, distance)
+
+        expect(image.image_array).to eq(expected_array)
+      end
+    end
+  end
+
   describe '#update_north_east' do
     context 'with distance of 1' do
       it 'should change the NE pixel to 1' do
