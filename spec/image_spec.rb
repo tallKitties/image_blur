@@ -650,7 +650,60 @@ RSpec.describe Image do
     end
   end
 
-  describe '#update_north_east' do
+  describe '#update_northwest' do
+    context 'with distance of 1' do
+      it 'should change the NW pixel to 1' do
+        normal_array = [
+          [0, 0, 0],
+          [0, 1, 0],
+          [0, 0, 0]
+        ]
+        expected_array = [
+          [1, 0, 0],
+          [0, 1, 0],
+          [0, 0, 0]
+        ]
+        row = 1
+        col = 1
+        image = Image.new(normal_array)
+        coord = Coordinate.new(row, col)
+
+        image.update_northwest(coord)
+
+        expect(image.image_array).to eq(expected_array)
+      end
+    end
+
+    context 'with distance of 2' do
+      it 'should change the NW pixel (diagonally 2 away) to 1' do
+        normal_array = [
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 1, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0]
+        ]
+        expected_array = [
+          [1, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 1, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0]
+        ]
+        row = 2
+        col = 2
+        distance = 2
+        image = Image.new(normal_array)
+        coord = Coordinate.new(row, col)
+
+        image.update_northwest(coord, distance)
+
+        expect(image.image_array).to eq(expected_array)
+      end
+    end
+  end
+
+  describe '#update_northeast' do
     context 'with distance of 1' do
       it 'should change the NE pixel to 1' do
         normal_array = [
@@ -668,7 +721,7 @@ RSpec.describe Image do
         image = Image.new(normal_array)
         coord = Coordinate.new(row, col)
 
-        image.update_north_east(coord)
+        image.update_northeast(coord)
 
         expect(image.image_array).to eq(expected_array)
       end
@@ -696,14 +749,14 @@ RSpec.describe Image do
         image = Image.new(normal_array)
         coord = Coordinate.new(row, col)
 
-        image.update_north_east(coord, distance)
+        image.update_northeast(coord, distance)
 
         expect(image.image_array).to eq(expected_array)
       end
     end
   end
 
-  describe '#update_south_east' do
+  describe '#update_southeast' do
     context 'with distance of 1' do
       it 'should change the SE pixel to 1' do
         normal_array = [
@@ -721,7 +774,7 @@ RSpec.describe Image do
         image = Image.new(normal_array)
         coord = Coordinate.new(row, col)
 
-        image.update_south_east(coord)
+        image.update_southeast(coord)
 
         expect(image.image_array).to eq(expected_array)
       end
@@ -749,14 +802,14 @@ RSpec.describe Image do
         image = Image.new(normal_array)
         coord = Coordinate.new(row, col)
 
-        image.update_south_east(coord, distance)
+        image.update_southeast(coord, distance)
 
         expect(image.image_array).to eq(expected_array)
       end
     end
   end
 
-  describe '#update_south_west' do
+  describe '#update_southwest' do
     context 'with distance of 1' do
       it 'should change the SW pixel to 1' do
         normal_array = [
@@ -774,7 +827,7 @@ RSpec.describe Image do
         image = Image.new(normal_array)
         coord = Coordinate.new(row, col)
 
-        image.update_south_west(coord)
+        image.update_southwest(coord)
 
         expect(image.image_array).to eq(expected_array)
       end
@@ -802,7 +855,7 @@ RSpec.describe Image do
         image = Image.new(normal_array)
         coord = Coordinate.new(row, col)
 
-        image.update_south_west(coord, distance)
+        image.update_southwest(coord, distance)
 
         expect(image.image_array).to eq(expected_array)
       end

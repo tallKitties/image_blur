@@ -59,45 +59,50 @@ class Image
     1.upto(height) { |h| update_south(coord, h) }
   end
 
-  def update_northwest_corner(coord, manhattan_distance = 2)
-    1.upto(manhattan_distance - 1) do |offset|
-      height = manhattan_distance - offset
+  def update_northwest_corner(coord, radius = 2)
+    1.upto(radius - 1) do |offset|
+      height = radius - offset
       update_north_column(coord.west(offset), height)
     end
   end
 
-  def update_northeast_corner(coord, manhattan_distance = 2)
-    1.upto(manhattan_distance - 1) do |offset|
-      height = manhattan_distance - offset
+  def update_northeast_corner(coord, manhattan_dist = 2)
+    1.upto(manhattan_dist - 1) do |offset|
+      height = manhattan_dist - offset
       update_north_column(coord.east(offset), height)
     end
   end
 
-  def update_southeast_corner(coord, manhattan_distance = 2)
-    1.upto(manhattan_distance - 1) do |offset|
-      height = manhattan_distance - offset
+  def update_southeast_corner(coord, manhattan_dist = 2)
+    1.upto(manhattan_dist - 1) do |offset|
+      height = manhattan_dist - offset
       update_south_column(coord.east(offset), height)
     end
   end
 
-  def update_southwest_corner(coord, manhattan_distance = 2)
-    1.upto(manhattan_distance - 1) do |offset|
-      height = manhattan_distance - offset
+  def update_southwest_corner(coord, manhattan_dist = 2)
+    1.upto(manhattan_dist - 1) do |offset|
+      height = manhattan_dist - offset
       update_south_column(coord.west(offset), height)
     end
   end
 
-  def update_north_east(coord, distance = 1)
+  def update_northeast(coord, distance = 1)
     coord_NE = coord.north(distance).east(distance)
     turn_pixel_on(coord_NE)
   end
 
-  def update_south_east(coord, distance = 1)
+  def update_northwest(coord, distance = 1)
+    coord_NE = coord.north(distance).west(distance)
+    turn_pixel_on(coord_NE)
+  end
+
+  def update_southeast(coord, distance = 1)
     coord_SE = coord.south(distance).east(distance)
     turn_pixel_on(coord_SE)
   end
 
-  def update_south_west(coord, distance = 1)
+  def update_southwest(coord, distance = 1)
     coord_SW = coord.south(distance).west(distance)
     turn_pixel_on(coord_SW)
   end
