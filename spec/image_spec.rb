@@ -457,7 +457,7 @@ RSpec.describe Image do
 
   describe '#update_northeast_corner' do
     context 'with manhattan distance of 2' do
-      it 'should change the N# pixel to 1' do
+      it 'should change the NE pixel to 1' do
         normal_array = [
           [0, 0, 0],
           [0, 1, 0],
@@ -480,7 +480,7 @@ RSpec.describe Image do
     end
 
     context 'with distance of 5' do
-      it 'should change the NW corner (manhattan distance of 5) to 1' do
+      it 'should change the NE corner (manhattan distance of 5) to 1' do
         normal_array = [
           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -514,6 +514,71 @@ RSpec.describe Image do
         coord = Coordinate.new(row, col)
 
         image.update_northeast_corner(coord, distance)
+
+        expect(image.image_array).to eq(expected_array)
+      end
+    end
+  end
+
+  describe '#update_southeast_corner' do
+    context 'with manhattan distance of 2' do
+      it 'should change the SE pixel to 1' do
+        normal_array = [
+          [0, 0, 0],
+          [0, 1, 0],
+          [0, 0, 0]
+        ]
+        expected_array = [
+          [0, 0, 0],
+          [0, 1, 0],
+          [0, 0, 1]
+        ]
+        row = 1
+        col = 1
+        image = Image.new(normal_array)
+        coord = Coordinate.new(row, col)
+
+        image.update_southeast_corner(coord)
+
+        expect(image.image_array).to eq(expected_array)
+      end
+    end
+
+    context 'with distance of 5' do
+      it 'should change the SE corner (manhattan distance of 5) to 1' do
+        normal_array = [
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ]
+        expected_array = [
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0],
+          [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
+          [0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ]
+        row = 5
+        col = 5
+        distance = 5
+        image = Image.new(normal_array)
+        coord = Coordinate.new(row, col)
+
+        image.update_southeast_corner(coord, distance)
 
         expect(image.image_array).to eq(expected_array)
       end

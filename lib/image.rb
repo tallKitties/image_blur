@@ -73,6 +73,13 @@ class Image
     end
   end
 
+  def update_southeast_corner(coord, manhattan_distance = 2)
+    1.upto(manhattan_distance - 1) do |offset|
+      height = manhattan_distance - offset
+      update_south_column(coord.east(offset), height)
+    end
+  end
+
   def update_north_east(coord, distance = 1)
     coord_NE = coord.north(distance).east(distance)
     turn_pixel_on(coord_NE)
