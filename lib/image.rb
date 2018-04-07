@@ -15,12 +15,12 @@ class Image
     end
   end
 
-  def blur(distance = 1)
+  def blur(radius = 1)
     pixel_coordinates.each do |coord|
-      if distance > 1
-        big_blur(coord, distance)
+      if radius > 1
+        big_blur(coord, radius)
       else
-        update_NSEW(coord, distance)
+        update_NSEW(coord, radius)
       end
     end
   end
@@ -117,18 +117,18 @@ class Image
 
   private
 
-  def big_blur(coord, distance)
-    1.upto(distance) do |d|
-      update_NSEW(coord, d)
-      update_corners(coord, d - 1) if d > 1
+  def big_blur(coord, radius)
+    1.upto(radius) do |r|
+      update_NSEW(coord, r)
+      update_corners(coord, r) if r >= 2
     end
   end
 
-  def update_corners(coord, distance)
-    update_northwest_corner(coord, distance)
-    update_north_east(coord, distance)
-    update_south_east(coord, distance)
-    update_south_west(coord, distance)
+  def update_corners(coord, radius)
+    update_northwest_corner(coord, radius)
+    update_northeast_corner(coord, radius)
+    update_southeast_corner(coord, radius)
+    update_southwest_corner(coord, radius)
   end
 
   def update_NSEW(coord, distance)
