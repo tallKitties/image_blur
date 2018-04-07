@@ -7,23 +7,23 @@ class Coordinate
     @coord = {row: @row, col: @col}
   end
 
-  def ==(other_coord_obj)
-    coord = other_coord_obj.coord
+  def ==(other)
+    coord == other.coord
   end
 
   def north(distance = 1)
-    self.class.new(@row - distance, @col)
+    Coordinate.new(@row - distance, @col)
   end
 
   def south(distance = 1)
-    self.class.new(@row + distance, @col)
+    Coordinate.new(@row + distance, @col)
   end
 
   def east(distance = 1)
-    self.class.new(@row, @col + distance)
+    Coordinate.new(@row, @col + distance)
   end
 
   def west(distance = 1)
-    self.class.new(@row, @col - distance)
+    Coordinate.new(@row, @col - distance)
   end
 end
